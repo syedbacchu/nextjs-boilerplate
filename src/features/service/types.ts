@@ -9,15 +9,13 @@ export interface ServiceListItem {
     id: number
     title: string
     slug: string
-    excerpt: string
-    thumbnail_img: string | null
-    featured_img?: string | null
-    status?: string
-    is_comment_allow?: boolean
-    published_at?: string | null
-    author?: BlogAuthor | null
-    categories?: BlogCategory[]
-    tags?: BlogTag[]
+    short_description: string
+    thumbnail: string | null
+    image?: string | null
+    status: boolean
+    is_featured: boolean
+    sort_order: number
+    category: ServiceCategory | null
 }
 
 export interface ServiceListResponse {
@@ -33,15 +31,11 @@ export interface ServiceListResponse {
 }
 
 export interface ServiceDetailsData extends ServiceListItem {
-    content: string
-    post_type?: string
-    visibility?: number
-    is_featured?: number
-    featured_order?: number
-    total_hit?: number
+    description: string
     meta_title?: string | null
     meta_keywords?: string | null
     meta_description?: string | null
+    meta_image?: string | null
     created_at?: string
     updated_at?: string
 }

@@ -2,19 +2,12 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { BlogListItem } from '@/features/blog'
+import { ServiceListItem } from '@/features/service'
 
-const DEFAULT_BLOG_IMAGE = '/og/default.png'
+const DEFAULT_SERVICE_IMAGE = '/og/default.png'
 
-function formatDate(value?: string | null) {
-    if (!value) return ''
-    const date = new Date(value.replace(' ', 'T'))
-    if (Number.isNaN(date.getTime())) return ''
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    })
+function isLocalAsset(url: string) {
+    return url.startsWith('http://localhost:8000/') || url.startsWith('http://127.0.0.1:8000/')
 }
 
 function trimText(text?: string, length: number = 170) {
@@ -24,14 +17,14 @@ function trimText(text?: string, length: number = 170) {
     return `${normalized.slice(0, length).trim()}...`
 }
 
-export default function ServiceCard({ item }: { item: BlogListItem }) {
-    const imageSrc = item.thumbnail_img?.trim() ? item.thumbnail_img : DEFAULT_BLOG_IMAGE
-    const published = formatDate(item.published_at)
-    const excerpt = trimText(item.excerpt)
+export default function ServiceCard({ item }: { item: ServiceListItem }) {
+    const imageSrc = item.thumbnail?.trim() ? item.thumbnail : DEFAULT_SERVICE_IMAGE
+    const shortDescription = trimText(item.short_description)
+    const unoptimized = isLocalAsset(imageSrc)
 
     return (
         <Link
-            href={`/blogs/${item.slug}`}
+            href={`/services/${item.slug}`}
             className="group block h-full rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
         >
             <div className="relative h-52 overflow-hidden bg-slate-100">
@@ -41,6 +34,7 @@ export default function ServiceCard({ item }: { item: BlogListItem }) {
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     quality={95}
+                    unoptimized={unoptimized}
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
             </div>
@@ -51,12 +45,14 @@ export default function ServiceCard({ item }: { item: BlogListItem }) {
                 </h3>
 
                 <p className="text-sm text-slate-600 leading-relaxed">
-                    {excerpt}
+                    {shortDescription || 'No short description available.'}
                 </p>
 
                 <div className="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs text-slate-500">
-                    <span className="font-semibold truncate">{item.author?.name || 'SetMyScore'}</span>
-                    {published && <span className="whitespace-nowrap">{published}</span>}
+                    <span className="font-semibold truncate">
+                        {item.category?.name || 'Service'}
+                    </span>
+                    {item.is_featured && <span className="whitespace-nowrap">Featured</span>}
                 </div>
             </div>
         </Link>
