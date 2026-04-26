@@ -2,7 +2,8 @@ import { Metadata } from "next"
 import { constructMetadata } from "@/lib/seo"
 import Link from "next/link"
 import HeroSlider from "@/components/ui/HeroSlider"
-import ServiceHomeSection from "@/features/service/components/ServiceHomeSection";
+import ServiceHomeSection from "@/features/home/components/ServiceHomeSection"
+import SavingsSection from "@/features/home/components/SavingsSection"
 
 export async function generateMetadata(): Promise<Metadata> {
     return constructMetadata({
@@ -164,8 +165,32 @@ export default async function Page() {
                 sectionDescription="Comprehensive solar energy solutions tailored to meet your specific needs and maximize your energy savings"
             />
 
+            {/* Savings/Benefits Section */}
+            <SavingsSection
+                items={[
+                    {
+                        icon: "/image/service/money.png",
+                        number: "80%",
+                        title: "10 kW",
+                        description: "Recommended System Size"
+                    },
+                    {
+                        icon: "/image/service/solar-panel.png",
+                        number: "100%",
+                        title: "BDT 8000",
+                        description: "Estimated Monthly Savings"
+                    },
+                    {
+                        icon: "/image/service/time-left.png",
+                        number: "25+",
+                        title: "4.2 Years",
+                        description: "Payback Period"
+                    }
+                ]}
+            />
+
             {/* CTA Section */}
-            <section className="py-24 bg-gradient-to-br from-green-600 to-emerald-700 relative overflow-hidden">
+            <section className="mt-8 py-24 bg-gradient-to-br from-green-600 to-emerald-700 relative overflow-hidden">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 bg-grid-white/[0.1] [mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.3))]" />
 
