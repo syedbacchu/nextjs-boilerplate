@@ -1,81 +1,53 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useRef, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
 import { useAuthStore } from '@/features/auth'
 import LogoutButton from '@/components/LogoutButton'
-import {IconType} from "react-icons";
-import {FaTrophy, FaUsers, FaUser, FaUserCircle, FaPhoneSquareAlt, FaUserEdit, FaRegNewspaper, FaChartLine} from "react-icons/fa"
-import {MdEmail, MdLiveTv} from "react-icons/md"
-import Image from "next/image";
-
+import { FaPhoneAlt, FaUserCircle, FaUserEdit } from 'react-icons/fa'
+import { MdEmail } from 'react-icons/md'
 
 interface NavItem {
     name: string
     href?: string
-    icon?: IconType
     children?: NavItem[]
 }
 
+const navLinks: NavItem[] = [
+    { name: 'Home', href: '/' },
+    { name: 'Features', href: '/features' },
+    { name: 'Service', href: '/services' },
+    { name: 'Portfolio', href: '/portfolio' },
+    { name: 'Teams', href: '/teams' },
+    { name: 'About Us', href: '/about-us' },
+    {
+        name: 'Support',
+        children: [
+            { name: 'Contact Us', href: '/contact-us' },
+            { name: 'FAQ', href: '/faqs' },
+            { name: 'Blogs', href: '/blogs' },
+        ],
+    },
+    {
+        name: 'Legal',
+        children: [
+            { name: 'Privacy Policy', href: '/privacy-policy/' },
+            { name: 'Terms & Conditions', href: '/terms-conditions' },
+            { name: 'Cookie Policy', href: '/cookie-policy' },
+        ],
+    },
+]
+
 export default function Header() {
+    const pathname = usePathname()
     const { user, loading } = useAuthStore()
     const [authOpen, setAuthOpen] = useState(false)
     const [mobileOpen, setMobileOpen] = useState(false)
     const [mobileSubmenus, setMobileSubmenus] = useState<string[]>([])
     const [hoveredMenu, setHoveredMenu] = useState<string | null>(null)
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-
-    const navLinks: NavItem[] = [
-        { name: 'Home', href: '/' ,icon: MdLiveTv},
-        { name: 'Features', href: '/features' ,icon: MdLiveTv},
-        { name: 'Service', href: '/services' ,icon: MdLiveTv},
-        { name: 'Portfolio', href: '/portfolio' ,icon: MdLiveTv},
-        { name: 'Teams', href: '/teams', icon: FaUsers,},
-        { name: 'About Us', href: '/about-us', icon: FaUser, },
-        { name: 'Support',
-            icon: FaTrophy,
-            children: [
-                        { name: 'Contact Us', href: '/contact-us' },
-                        { name: 'FAQ', href: '/faqs' },
-                        { name: 'Blogs', href: '/blogs' }
-                    ],
-            },
-        { name: 'Legal',
-            icon: FaTrophy,
-            children: [
-                ...(user
-                    ? [
-                        { name: 'Privacy Policy', href: '/privacy-policy/' },
-                        { name: 'Terms & Conditions', href: '/terms-conditions' },
-                        { name: 'Cookie Policy', href: '/cookie-policy' }
-                    ]
-                    : [
-                        { name: 'Privacy Policy', href: '/privacy-policy/' },
-                        { name: 'Terms & Conditions', href: '/terms-conditions' },
-                        { name: 'Cookie Policy', href: '/cookie-policy' }
-                    ]),
-
-            ]},
-    ]
-
-    const handleMouseEnter = (name: string) => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current)
-        }
-        setHoveredMenu(name)
-    }
-
-    const handleMouseLeave = () => {
-        timeoutRef.current = setTimeout(() => {
-            setHoveredMenu(null)
-        }, 200)
-    }
-
-    const toggleMobileSubmenu = (name: string) => {
-        setMobileSubmenus((prev) =>
-            prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
-        )
-    }
 
     useEffect(() => {
         return () => {
@@ -87,130 +59,180 @@ export default function Header() {
 
     if (loading) return null
 
+    const isActive = (href?: string) => {
+        if (!href) return false
+        return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`)
+    }
+
+    const toggleMobileSubmenu = (name: string) => {
+        setMobileSubmenus((prev) =>
+            prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
+        )
+    }
+
+    const handleMouseEnter = (name: string) => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current)
+        }
+        setHoveredMenu(name)
+    }
+
+    const handleMouseLeave = () => {
+        timeoutRef.current = setTimeout(() => {
+            setHoveredMenu(null)
+        }, 180)
+    }
+
     return (
-        <header className="border-b bg-white sticky top-0 z-50 shadow-sm">
-            <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                {/* Left: Hamburger + Logo */}
-                <div className="flex items-center gap-4">
+        <header className="sticky top-0 z-50 border-b border-black/5 bg-white/95 backdrop-blur">
+            <div className="mx-auto flex h-20 container items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center gap-3">
                     <button
-                        className="md:hidden p-2 rounded hover:bg-gray-100 transition"
-                        onClick={() => setMobileOpen((prev) => !prev)}
+                        type="button"
                         aria-label="Toggle menu"
+                        className="rounded-md p-2 transition hover:bg-emerald-50 lg:hidden"
+                        onClick={() => setMobileOpen((prev) => !prev)}
                     >
-                        <div className="w-5 h-4 flex flex-col justify-between">
-                            <span className={`block w-5 h-0.5 bg-black transition-all duration-300 ${mobileOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
-                            <span className={`block w-5 h-0.5 bg-black transition-all duration-300 ${mobileOpen ? 'opacity-0' : ''}`} />
-                            <span className={`block w-5 h-0.5 bg-black transition-all duration-300 ${mobileOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
+                        <div className="flex h-5 w-5 flex-col justify-between">
+                            <span className={`block h-0.5 w-5 bg-emerald-700 transition-all duration-300 ${mobileOpen ? 'translate-y-2 rotate-45' : ''}`} />
+                            <span className={`block h-0.5 w-5 bg-emerald-700 transition-all duration-300 ${mobileOpen ? 'opacity-0' : ''}`} />
+                            <span className={`block h-0.5 w-5 bg-emerald-700 transition-all duration-300 ${mobileOpen ? '-translate-y-2 -rotate-45' : ''}`} />
                         </div>
                     </button>
 
                     <Link href="/" className="flex items-center">
                         <Image
-                            src={'/logo.png'}
-                            alt={'setmyscore'}
-                            width={140}  // Set your actual pixel width
-                            height={40}  // Set your actual pixel height
-                            className="w-auto h-12 md:h-16" // Responsive height using Tailwind
+                            src="/logo.png"
+                            alt="Logo"
+                            width={180}
+                            height={54}
+                            className="h-11 w-auto"
                             priority
                         />
                     </Link>
                 </div>
 
-                {/* Desktop Navigation */}
-                <nav className="hidden md:flex items-center gap-6 relative">
+                <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex">
                     {navLinks.map((link) =>
-                            !link.children ? (
-                                <Link
-                                    key={link.name}
-                                    href={link.href!}
-                                    className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
+                        !link.children ? (
+                            <Link
+                                key={link.name}
+                                href={link.href!}
+                                className={`relative px-4 py-2 text-[15px] font-medium transition-colors hover:text-emerald-600 ${isActive(link.href) ? 'text-emerald-600' : 'text-slate-700'} after:absolute after:left-4 after:right-4 after:bottom-0 after:h-0.5 after:bg-emerald-600 after:transition-transform after:duration-200 after:content-[''] ${isActive(link.href) ? 'after:scale-x-100' : 'after:scale-x-0 hover:after:scale-x-100'} after:origin-center`}
+                            >
+                                {link.name}
+                            </Link>
+                        ) : (
+                            <div
+                                key={link.name}
+                                className="relative"
+                                onMouseEnter={() => handleMouseEnter(link.name)}
+                                onMouseLeave={handleMouseLeave}
+                            >
+                                <button
+                                    type="button"
+                                    className={`flex items-center gap-1 px-4 py-2 text-[15px] font-medium transition-colors hover:text-emerald-600 ${hoveredMenu === link.name ? 'text-emerald-600' : 'text-slate-700'}`}
                                 >
-                                    {link.icon && <link.icon className="text-base" />}
-                                    {link.name}
-                                </Link>
-                            ) : (
-                                <div
-                                    key={link.name}
-                                    className="relative"
-                                    onMouseEnter={() => handleMouseEnter(link.name)}
-                                    onMouseLeave={handleMouseLeave}
-                                >
-                <span className="text-sm font-medium hover:text-purple-700 cursor-pointer transition-colors flex items-center gap-2">
-                  {link.icon && <link.icon className="text-base" />}
-                    {link.name}
-                    <svg className={`w-3 h-3 transition-transform duration-200 ${hoveredMenu === link.name ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </span>
+                                    <span>{link.name}</span>
+                                    <svg
+                                        className={`h-4 w-4 transition-transform duration-200 ${hoveredMenu === link.name ? 'rotate-180' : ''}`}
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
 
-                                    {hoveredMenu === link.name && (
-                                        <div
-                                            className="absolute left-0 mt-2 bg-white border rounded-lg shadow-lg min-w-[180px] overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200"
-                                            onMouseEnter={() => handleMouseEnter(link.name)}
-                                            onMouseLeave={handleMouseLeave}
-                                        >
-                                            {link.children.map((child, idx) => (
-                                                <Link
-                                                    key={child.name}
-                                                    href={child.href!}
-                                                    className={`block px-4 py-3 text-sm whitespace-nowrap hover:bg-[#203F6F] hover:text-white transition-colors ${idx !== link.children!.length - 1 ? 'border-b border-gray-100' : ''}`}
-                                                >
-                                                    {child.name}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            )
+                                {hoveredMenu === link.name && (
+                                    <div
+                                        className="absolute left-0 top-full z-50 mt-2 min-w-[210px] overflow-hidden rounded-xl border border-black/5 bg-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]"
+                                        onMouseEnter={() => handleMouseEnter(link.name)}
+                                        onMouseLeave={handleMouseLeave}
+                                    >
+                                        {link.children.map((child, idx) => (
+                                            <Link
+                                                key={child.name}
+                                                href={child.href!}
+                                                className={`block px-4 py-3 text-sm text-slate-700 transition-colors hover:bg-emerald-50 hover:text-emerald-700 ${idx !== link.children!.length - 1 ? 'border-b border-black/5' : ''}`}
+                                            >
+                                                {child.name}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )
                     )}
                 </nav>
 
-                {/* Auth menu */}
-                <div className="flex items-center gap-4 relative">
+                <div className="hidden items-center gap-4 lg:flex">
+                    <a
+                        href="tel:+8801712345678"
+                        className="flex items-center gap-2 text-[15px] font-semibold text-slate-700 transition-colors hover:text-emerald-600"
+                    >
+                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+                            <FaPhoneAlt className="text-sm" />
+                        </span>
+                        <span>01712 345 678</span>
+                    </a>
+
                     {!user ? (
-                        <Link href="/login" className="text-sm font-medium hover:text-primary transition-colors px-4 py-2 border border-primary rounded-lg hover:bg-primary hover:text-white">
-                            Login
+                        <Link
+                            href="/login"
+                            className="inline-flex h-11 items-center rounded-md bg-emerald-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+                        >
+                            Get Free Quote
                         </Link>
                     ) : (
                         <div className="relative">
                             <button
-                                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                                type="button"
                                 onClick={() => setAuthOpen((prev) => !prev)}
+                                className="flex items-center gap-2 rounded-full border border-black/5 bg-white px-3 py-2 shadow-sm transition hover:border-emerald-100 hover:shadow-md"
                             >
-                                <img src={user.image || '/default-user.png'} alt="user" className="w-8 h-8 rounded-full border-2 border-gray-200" />
-                                <span className=" text-sm font-medium">{user.name}</span>
-                                <svg className={`w-3 h-3 transition-transform duration-200 ${authOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <Image
+                                    src={user.image || '/default-user.png'}
+                                    alt="user"
+                                    width={32}
+                                    height={32}
+                                    className="h-8 w-8 rounded-full border border-black/5 object-cover"
+                                    unoptimized
+                                />
+                                <span className="max-w-28 truncate text-sm font-medium text-slate-700">{user.name}</span>
+                                <svg
+                                    className={`h-3 w-3 text-slate-500 transition-transform duration-200 ${authOpen ? 'rotate-180' : ''}`}
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
 
                             {authOpen && (
-                                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg p-2 flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                                    {user.name &&
-                                        <span className="text-sm text-gray-600 px-2 py-1 flex items-center gap-2">
+                                <div className="absolute right-0 mt-2 w-52 rounded-xl border border-black/5 bg-white p-2 shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
+                                    {user.name && (
+                                        <span className="flex items-center gap-2 px-2 py-2 text-sm text-slate-600">
                                             <FaUserCircle className="text-base" />
                                             {user.name}
-                                        </span>}
-                                    {user.email &&
-                                        <span className="text-sm text-gray-600 px-2 py-1 flex items-center gap-2">
+                                        </span>
+                                    )}
+                                    {user.email && (
+                                        <span className="flex items-center gap-2 px-2 py-2 text-sm text-slate-600">
                                             <MdEmail className="text-base" />
                                             {user.email}
-                                        </span>}
-                                    {user.phone &&
-                                        <span className="text-sm text-gray-600 px-2 py-1 flex items-center gap-2">
-                                            <FaPhoneSquareAlt className="text-base" />
-                                            {user.phone}
-                                        </span>}
-                                    <div className="border-t pt-2">
-                                        <Link href='/admin/profile/update'>
-                                            <span className="text-sm text-gray-600 px-2 py-1 flex items-center gap-2">
-                                            <FaUserEdit className="text-base" />
-                                                {'Update Profile'}
                                         </span>
-
+                                    )}
+                                    <div className="border-t border-black/5 pt-2">
+                                        <Link href="/admin/profile/update">
+                                            <span className="flex items-center gap-2 px-2 py-2 text-sm text-slate-600 transition hover:text-emerald-700">
+                                                <FaUserEdit className="text-base" />
+                                                Update Profile
+                                            </span>
                                         </Link>
                                     </div>
-                                    <div className="border-t pt-2">
+                                    <div className="border-t border-black/5 pt-2">
                                         <LogoutButton />
                                     </div>
                                 </div>
@@ -220,53 +242,82 @@ export default function Header() {
                 </div>
             </div>
 
-            {/* Mobile Navigation */}
-            <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? 'max-h-screen border-t' : 'max-h-0'}`}>
-                <nav className="bg-gray-50 flex flex-col">
-                    {navLinks.map((link, idx) =>
-                        !link.children ? (
-                            <Link
-                                key={link.name}
-                                href={link.href!}
-                                className="text-sm font-medium hover:bg-white hover:text-primary px-4 py-3 transition-colors border-b border-gray-200 "
-                                onClick={() => setMobileOpen(false)}
-                            >
-                                <span className="flex items-center gap-2">
-                                    {link.icon && <link.icon className="text-base" />}
-                                    {link.name}
-                                </span>
-                            </Link>
-                        ) : (
-                            <div key={link.name} className="border-b border-gray-200">
-                                <button
-                                    className="text-sm font-medium flex justify-between items-center w-full px-4 py-3 hover:bg-white transition-colors"
-                                    onClick={() => toggleMobileSubmenu(link.name)}
+            <div className={`overflow-hidden border-t border-black/5 bg-white lg:hidden transition-all duration-300 ${mobileOpen ? 'max-h-[34rem]' : 'max-h-0'}`}>
+                <nav className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
+                    <div className="flex flex-col">
+                        {navLinks.map((link) =>
+                            !link.children ? (
+                                <Link
+                                    key={link.name}
+                                    href={link.href!}
+                                    onClick={() => setMobileOpen(false)}
+                                    className={`border-b border-black/5 py-3 text-sm font-medium ${isActive(link.href) ? 'text-emerald-600' : 'text-slate-700'}`}
                                 >
-                                    <span>{link.name}</span>
-                                    <svg className={`w-4 h-4 transition-transform duration-200 ${mobileSubmenus.includes(link.name) ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </button>
-                                <div className={`overflow-hidden transition-all duration-300 ${mobileSubmenus.includes(link.name) ? 'max-h-96' : 'max-h-0'}`}>
-                                    <div className="bg-white">
-                                        {link.children?.map((child, childIdx) => (
-                                            <Link
-                                                key={child.name}
-                                                href={child.href!}
-                                                className={`block pl-8 pr-4 py-3 text-sm hover:bg-primary hover:text-white transition-colors ${childIdx !== link.children!.length - 1 ? 'border-b border-gray-100' : ''}`}
-                                                onClick={() => setMobileOpen(false)}
-                                            >
-                        <span className="flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 bg-current rounded-full"></span>
-                            {child.name}
-                        </span>
-                                            </Link>
-                                        ))}
+                                    {link.name}
+                                </Link>
+                            ) : (
+                                <div key={link.name} className="border-b border-black/5">
+                                    <button
+                                        type="button"
+                                        onClick={() => toggleMobileSubmenu(link.name)}
+                                        className="flex w-full items-center justify-between py-3 text-sm font-medium text-slate-700"
+                                    >
+                                        <span>{link.name}</span>
+                                        <svg
+                                            className={`h-4 w-4 transition-transform duration-200 ${mobileSubmenus.includes(link.name) ? 'rotate-180' : ''}`}
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                    <div className={`overflow-hidden transition-all duration-300 ${mobileSubmenus.includes(link.name) ? 'max-h-96' : 'max-h-0'}`}>
+                                        <div className="pb-2">
+                                            {link.children.map((child) => (
+                                                <Link
+                                                    key={child.name}
+                                                    href={child.href!}
+                                                    onClick={() => setMobileOpen(false)}
+                                                    className="block py-2 pl-4 text-sm text-slate-600"
+                                                >
+                                                    {child.name}
+                                                </Link>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )
-                    )}
+                            )
+                        )}
+
+                        <div className="flex items-center justify-between gap-4 pt-4">
+                            <a
+                                href="tel:+8801712345678"
+                                className="flex items-center gap-2 text-sm font-semibold text-slate-700"
+                            >
+                                <FaPhoneAlt className="text-emerald-700" />
+                                01712 345 678
+                            </a>
+
+                            {!user ? (
+                                <Link
+                                    href="/login"
+                                    onClick={() => setMobileOpen(false)}
+                                    className="inline-flex h-10 items-center rounded-md bg-emerald-600 px-4 text-sm font-semibold text-white"
+                                >
+                                    Login
+                                </Link>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => setAuthOpen((prev) => !prev)}
+                                    className="inline-flex h-10 items-center rounded-md border border-black/5 px-4 text-sm font-semibold text-slate-700"
+                                >
+                                    Account
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </nav>
             </div>
         </header>
