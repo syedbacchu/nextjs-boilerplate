@@ -170,19 +170,16 @@ export default async function Page() {
                 items={[
                     {
                         icon: "/image/service/money.png",
-                        number: "80%",
                         title: "10 kW",
                         description: "Recommended System Size"
                     },
                     {
                         icon: "/image/service/solar-panel.png",
-                        number: "100%",
                         title: "BDT 8000",
                         description: "Estimated Monthly Savings"
                     },
                     {
                         icon: "/image/service/time-left.png",
-                        number: "25+",
                         title: "4.2 Years",
                         description: "Payback Period"
                     }
