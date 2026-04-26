@@ -9,10 +9,10 @@ export default function ServicesCard({ item }: { item: SingleServiceItem }) {
     return (
         <Link
             href={`/services/${item.slug}`}
-            className="group block h-full rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+            className="group block h-full rounded-xl border border-gray-200 bg-white p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col items-center text-center"
         >
             {/* Service Image */}
-            <div className="mb-5 h-32 w-full relative">
+            <div className="mb-5 h-24 w-full relative">
                 <Image
                     src={item.image}
                     alt={item.title}

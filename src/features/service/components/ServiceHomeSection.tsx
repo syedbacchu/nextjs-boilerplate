@@ -16,7 +16,7 @@ export default function ServiceHomeSection({
 }: ServicesSectionProps) {
     return (
         <section className="py-20 bg-gradient-to-b from-slate-50 to-white">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <div className="text-center mb-16">
                     <h2 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl mb-4">
@@ -33,7 +33,7 @@ export default function ServiceHomeSection({
                 </div>
 
                 {/* Services Grid */}
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
                     {services.map((service, index) => (
                         <ServicesCard item={service}/>
                     ))}

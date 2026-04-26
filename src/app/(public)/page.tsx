@@ -132,31 +132,31 @@ export default async function Page() {
                 services={[
                     {
                         id: 1,
+                        slug: "residential-solar",
                         image: "/image/service/service1.png",
                         title: "Residential Solar",
-                        description: "Power your home with clean, renewable energy and reduce your electricity bills by up to 80%.",
-                        link: "/services/residential-solar"
+                        description: "Power your home with clean, renewable energy and reduce your electricity bills by up to 80%."
                     },
                     {
                         id: 2,
+                        slug: "commercial-solar",
                         image: "/image/service/service1.png",
                         title: "Commercial Solar",
-                        description: "Scalable solar solutions for businesses of all sizes. Cut operational costs and boost sustainability.",
-                        link: "/services/commercial-solar"
+                        description: "Scalable solar solutions for businesses of all sizes. Cut operational costs and boost sustainability."
                     },
                     {
                         id: 3,
+                        slug: "industrial-solar",
                         image: "/image/service/service1.png",
                         title: "Industrial Solar",
-                        description: "High-capacity solar systems designed for industrial facilities and manufacturing plants.",
-                        link: "/services/industrial-solar"
+                        description: "High-capacity solar systems designed for industrial facilities and manufacturing plants."
                     },
                     {
                         id: 4,
+                        slug: "solar-irrigation",
                         image: "/image/service/service1.png",
                         title: "Solar Irrigation",
-                        description: "Comprehensive maintenance services to keep your solar system operating at peak efficiency.",
-                        link: "/services/solar-maintenance"
+                        description: "Comprehensive maintenance services to keep your solar system operating at peak efficiency."
                     },
 
                 ]}
