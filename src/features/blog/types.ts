@@ -9,6 +9,11 @@ export interface BlogCategory {
     slug: string
 }
 
+export interface BlogSummaryCategory extends BlogCategory {
+    status?: boolean
+    blogs_count?: number
+}
+
 export interface BlogTag {
     id: number
     name: string
@@ -52,6 +57,7 @@ export interface BlogDetailsData extends BlogListItem {
     meta_title?: string | null
     meta_keywords?: string | null
     meta_description?: string | null
+    similar_blogs?: BlogListItem[]
     created_at?: string
     updated_at?: string
 }
@@ -60,6 +66,17 @@ export interface BlogDetailsResponse {
     success: boolean
     message: string
     data: BlogDetailsData
+    status?: number
+    error_message?: string
+}
+
+export interface BlogSummaryResponse {
+    success: boolean
+    message: string
+    data: {
+        latest_blogs: BlogListItem[]
+        categories: BlogSummaryCategory[]
+    }
     status?: number
     error_message?: string
 }

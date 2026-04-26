@@ -1,10 +1,12 @@
 'use server'
 
-import { BlogService, BlogCommentsResponse, BlogDetailsResponse, BlogListResponse} from '@/features/service'
+import { BlogService, BlogCommentsResponse, BlogDetailsResponse, BlogListResponse} from '@/features/blog'
 
 export async function getBlogPublicListAction(
     page: number,
     search: string,
+    category?: string,
+    tag?: string,
     is_featured?: number | string,
     is_match_coverage?: number | string,
     is_top_story?: number | string,
@@ -12,6 +14,8 @@ export async function getBlogPublicListAction(
     const response = await BlogService.publicList(
         page,
         search,
+        category,
+        tag,
         is_featured,
         is_match_coverage,
         is_top_story,

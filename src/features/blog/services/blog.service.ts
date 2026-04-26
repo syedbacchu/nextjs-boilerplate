@@ -4,6 +4,8 @@ export const BlogService = {
     async publicList(
         page: number = 1,
         search: string = '',
+        category?: string,
+        tag?: string,
         is_featured?: number | string,
         is_match_coverage?: number | string,
         is_top_story?: number | string,
@@ -11,7 +13,17 @@ export const BlogService = {
         return request({
             method: 'GET',
             url: '/blogs',
-            params: { page, search, is_featured, is_match_coverage, is_top_story },
+            params: {
+                page,
+                search,
+                category,
+                category_slug: category,
+                tag,
+                tag_slug: tag,
+                is_featured,
+                is_match_coverage,
+                is_top_story,
+            },
         })
     },
 
@@ -19,6 +31,13 @@ export const BlogService = {
         return request({
             method: 'GET',
             url: `/blogs/${slug}`,
+        })
+    },
+
+    summary() {
+        return request({
+            method: 'GET',
+            url: '/blogs/summary',
         })
     },
 
