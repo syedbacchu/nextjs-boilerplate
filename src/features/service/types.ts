@@ -47,3 +47,12 @@ export interface ServiceDetailsResponse {
     status?: number
     error_message?: string
 }
+
+export interface SingleServiceItem {
+    id: number
+    slug: string
+    image: string
+    title: string
+    description: string
+    link?: string
+}
