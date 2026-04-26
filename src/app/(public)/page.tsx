@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { constructMetadata } from "@/lib/seo"
-import Image from "next/image"
 import Link from "next/link"
+import HeroSlider from "@/components/ui/HeroSlider"
 
 export async function generateMetadata(): Promise<Metadata> {
     return constructMetadata({
@@ -12,83 +12,119 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
+    // Define your hero slides here
+    const heroSlides = [
+        {
+            image: "/image/slider/slider2.jpg",
+            title: "POWER YOUR FUTURE",
+            highlightText: "WITH SOLAR ENERGY",
+            subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
+            buttons: [
+                {
+                    text: "Get Free Consultation",
+                    href: "/contact-us",
+                    variant: "primary" as const
+                },
+                {
+                    text: "View Our Projects",
+                    href: "/services",
+                    variant: "secondary" as const
+                }
+            ],
+            trustBadges: [
+                {
+                    icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
+                    heading: "500+ Successful Projects",
+                    subHeading: "Completed installations"
+                },
+                {
+                    icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z",
+                    heading: "5–10 Year Warranty",
+                    subHeading: "Guaranteed performance"
+                },
+                {
+                    icon: "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6",
+                    heading: "High ROI in 3–5 Years",
+                    subHeading: "Maximum returns"
+                }
+            ]
+        },
+        {
+            image: "/image/slider/slider3.avif",
+            title: "POWER YOUR FUTURE",
+            highlightText: "WITH SOLAR ENERGY",
+            subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
+            buttons: [
+                {
+                    text: "Get Free Consultation",
+                    href: "/contact-us",
+                    variant: "primary" as const
+                },
+                {
+                    text: "View Our Projects",
+                    href: "/services",
+                    variant: "secondary" as const
+                }
+            ],
+            trustBadges: [
+                {
+                    icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
+                    heading: "500+ Successful Projects",
+                    subHeading: "Completed installations"
+                },
+                {
+                    icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z",
+                    heading: "5–10 Year Warranty",
+                    subHeading: "Guaranteed performance"
+                },
+                {
+                    icon: "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6",
+                    heading: "High ROI in 3–5 Years",
+                    subHeading: "Maximum returns"
+                }
+            ]
+        },
+        {
+            image: "/image/slider/slider1.jpeg",
+            title: "POWER YOUR FUTURE",
+            highlightText: "WITH SOLAR ENERGY",
+            subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
+            buttons: [
+                {
+                    text: "Get Free Consultation",
+                    href: "/contact-us",
+                    variant: "primary" as const
+                },
+                {
+                    text: "View Our Projects",
+                    href: "/services",
+                    variant: "secondary" as const
+                }
+            ],
+            trustBadges: [
+                {
+                    icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
+                    heading: "500+ Successful Projects",
+                    subHeading: "Completed installations"
+                },
+                {
+                    icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z",
+                    heading: "5–10 Year Warranty",
+                    subHeading: "Guaranteed performance"
+                },
+                {
+                    icon: "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6",
+                    heading: "High ROI in 3–5 Years",
+                    subHeading: "Maximum returns"
+                }
+            ]
+        }
+    ]
 
     return (
         <main className="w-full">
-            {/* Hero Section */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-                <div className="absolute inset-0 bg-grid-slate-200/[0.5] [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
-
-                <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
-                    <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 items-center">
-                        {/* Left Content */}
-                        <div className="space-y-8">
-                            <div className="space-y-4">
-                                <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-                                    Transform Data Into
-                                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mt-2">
-                                        Actionable Insights
-                                    </span>
-                                </h1>
-                                <p className="max-w-2xl text-lg text-slate-600 sm:text-xl">
-                                    Unlock the power of your data with our advanced analytics platform. Make smarter decisions, identify trends, and drive business growth with real-time dashboards and reports.
-                                </p>
-                            </div>
-
-                            <div className="flex flex-col gap-4 sm:flex-row">
-                                <Link
-                                    href="/contact-us"
-                                    className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-blue-600/30 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-600/40"
-                                >
-                                    Get Started Free
-                                </Link>
-                                <Link
-                                    href="/services"
-                                    className="inline-flex items-center justify-center rounded-lg border-2 border-slate-300 bg-white px-8 py-4 text-base font-semibold text-slate-700 shadow-sm transition-all duration-300 hover:border-blue-600 hover:text-blue-600"
-                                >
-                                    Learn More
-                                </Link>
-                            </div>
-
-                            {/* Trust Badges */}
-                            <div className="pt-8">
-                                <p className="text-sm font-medium text-slate-500 mb-4">Trusted by leading companies worldwide</p>
-                                <div className="flex flex-wrap gap-8 items-center opacity-60">
-                                    <div className="text-2xl font-bold text-slate-400">TechCorp</div>
-                                    <div className="text-2xl font-bold text-slate-400">DataFlow</div>
-                                    <div className="text-2xl font-bold text-slate-400">Analytics Pro</div>
-                                    <div className="text-2xl font-bold text-slate-400">CloudScale</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Right Content - Hero Image */}
-                        <div className="relative">
-                            <div className="relative mx-auto w-full max-w-lg">
-                                {/* Decorative elements */}
-                                <div className="absolute -top-12 -right-12 h-64 w-64 rounded-full bg-blue-400/20 blur-3xl" />
-                                <div className="absolute -bottom-12 -left-12 h-64 w-64 rounded-full bg-indigo-400/20 blur-3xl" />
-
-                                {/* Main illustration placeholder */}
-                                <div className="relative rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 p-8 shadow-2xl shadow-blue-600/30">
-                                    <div className="aspect-square rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                                        <div className="text-center text-white space-y-4">
-                                            {/* Analytics dashboard icon representation */}
-                                            <div className="flex justify-center gap-2">
-                                                <div className="h-20 w-8 rounded bg-white/30 animate-pulse" />
-                                                <div className="h-32 w-8 rounded bg-white/50 animate-pulse delay-100" />
-                                                <div className="h-24 w-8 rounded bg-white/40 animate-pulse delay-200" />
-                                                <div className="h-16 w-8 rounded bg-white/20 animate-pulse delay-300" />
-                                            </div>
-                                            <p className="text-lg font-semibold">Real-time Analytics</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            {/* Hero Slider Section */}
+            <HeroSlider slides={heroSlides} autoSlideInterval={5000} />
 
             {/* Features Section */}
             <section className="py-24 bg-white">
