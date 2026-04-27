@@ -16,7 +16,14 @@ interface NavItem {
 }
 
 const navLinks: NavItem[] = [
-    { name: 'Home', href: '/' },
+    {
+        name: 'Home',
+        children: [
+            { name: 'Main', href: '/' },
+            { name: 'Solar', href: '/solar' },
+            { name: 'Vexaev', href: '/vexaev' },
+        ],
+    },
     { name: 'Features', href: '/features' },
     { name: 'Service', href: '/services' },
     { name: 'Portfolio', href: '/portfolio' },

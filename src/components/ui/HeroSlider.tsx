@@ -71,7 +71,7 @@ export default function HeroSlider({ slides, autoSlideInterval = 5000 }: HeroSli
   const slide = slides[currentSlide]
 
   return (
-    <section className="relative overflow-hidden min-h-[600px] lg:min-h-[700px]">
+    <section className="relative overflow-hidden min-h-[420px] lg:min-h-[500px]">
       {/* Background Image with Overlay */}
       <div
         className={`absolute inset-0 transition-opacity duration-500 ${
@@ -85,22 +85,40 @@ export default function HeroSlider({ slides, autoSlideInterval = 5000 }: HeroSli
         }}
       />
 
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
+      {/* Blur/fade panel for the left content area */}
+      <div
+        className="absolute inset-y-0 left-0 w-full lg:w-[58%]"
+        style={{
+          backgroundImage: `url(${slide.image})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'left center',
+          backgroundRepeat: 'no-repeat',
+          filter: 'blur(32px)',
+          transform: 'scale(1.06)',
+          maskImage: 'linear-gradient(90deg, black 0%, black 58%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(90deg, black 0%, black 58%, transparent 100%)',
+        }}
+      />
 
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-        <div className="grid grid-cols-1 gap-8 lg:gap-12 items-start lg:grid-cols-2">
+      {/* Bright left wash to match the reference composition */}
+      <div className="absolute inset-y-0 left-0 w-full bg-gradient-to-r from-white/88 via-white/72 via-40% to-white/0 lg:w-[62%]" />
+
+      {/* Global contrast overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-950/10 via-slate-900/5 to-slate-950/30" />
+
+      <div className="relative px-4 py-10 sm:px-8 lg:px-12 lg:py-12 xl:px-16">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           {/* Left Content */}
-          <div className="space-y-6 lg:space-y-8">
+          <div className="space-y-4 lg:max-w-2xl lg:space-y-5">
             {/* Title Section */}
-            <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <div className="space-y-3">
+              <h1 className="text-4xl font-bold tracking-tight text-slate-950 sm:text-[3.2rem] lg:text-[3.25rem] lg:leading-[0.95]">
                 {slide.title}
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 mt-2">
+                <span className="mt-2 block bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
                   {slide.highlightText}
                 </span>
               </h1>
-              <p className="max-w-xl text-lg text-gray-200 sm:text-xl">
+              <p className="max-w-xl text-base text-slate-700 sm:text-lg sm:leading-7">
                 {slide.subtitle}
               </p>
             </div>
@@ -111,10 +129,10 @@ export default function HeroSlider({ slides, autoSlideInterval = 5000 }: HeroSli
                 <Link
                   key={index}
                   href={button.href}
-                  className={`inline-flex items-center justify-center rounded-lg px-8 py-4 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105 ${
+                  className={`inline-flex items-center justify-center rounded-lg px-7 py-3 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-[1.02] ${
                     button.variant === 'primary'
                       ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40'
-                      : 'border-2 border-white bg-white/10 text-white backdrop-blur-sm shadow-sm hover:bg-white hover:text-green-600'
+                      : 'border-2 border-emerald-200 bg-white/75 text-slate-800 backdrop-blur-sm shadow-sm hover:bg-white hover:text-green-600'
                   }`}
                 >
                   {button.text}
@@ -128,17 +146,19 @@ export default function HeroSlider({ slides, autoSlideInterval = 5000 }: HeroSli
             </div>
 
             {/* Trust Badges */}
-            <div className="pt-6">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="pt-2">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 {slide.trustBadges.map((badge, index) => (
-                  <div key={index} className="flex flex-col items-center text-center">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500/20 text-green-400 mb-2 backdrop-blur-sm">
+                  <div key={index} className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/70 px-4 py-2.5 shadow-sm backdrop-blur-sm">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-green-500/15 text-green-600">
                       <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={badge.icon} />
                       </svg>
                     </div>
-                    <p className="text-sm font-semibold text-white">{badge.heading}</p>
-                    <p className="text-xs text-gray-300">{badge.subHeading}</p>
+                    <div>
+                      <p className="text-base font-bold text-slate-900">{badge.heading}</p>
+                      <p className="text-sm text-slate-600">{badge.subHeading}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -151,7 +171,7 @@ export default function HeroSlider({ slides, autoSlideInterval = 5000 }: HeroSli
 
         {/* Slider Navigation - Only show if more than one slide */}
         {slides.length > 1 && (
-          <div className="flex items-center justify-center gap-3 mt-8">
+          <div className="mt-5 flex items-center justify-center gap-3">
             {/* Previous Button */}
             {/*<button*/}
             {/*  onClick={handlePrevious}*/}
