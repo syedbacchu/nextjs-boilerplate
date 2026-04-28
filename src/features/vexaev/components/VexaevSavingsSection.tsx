@@ -1,109 +1,159 @@
 'use client'
 
 import Image from 'next/image'
-import { Calculator, ChevronDown } from 'lucide-react'
+import Link from 'next/link'
+import { BatteryCharging, Calculator, CircleDollarSign, House, PlugZap } from 'lucide-react'
 
 export interface SavingsItem {
-  icon: string
-  number?: string
   title: string
   description: string
+  icon?: string
+  key?: 'home' | 'public' | 'portable' | 'cost'
 }
 
 interface SavingsSectionProps {
   items: SavingsItem[]
 }
 
+const chargingIcons = {
+  home: House,
+  public: PlugZap,
+  portable: BatteryCharging,
+  cost: CircleDollarSign,
+} as const
+
 export default function VexaevSavingsSection({
   items,
 }: SavingsSectionProps) {
   return (
-       <section className="rounded-[28px] bg-gradient-to-br from-emerald-700 via-green-700 to-emerald-800  p-4 shadow-[0_28px_80px_rgba(5,68,36,0.35)] backdrop-blur-sm sm:p-6 lg:p-7">
-          <div className="grid items-stretch gap-4 lg:grid-cols-[1.05fr_1fr] lg:gap-5">
-            <div className="rounded-[24px] bg-gradient-to-br from-emerald-700 via-emerald-700 to-green-800 p-5 text-white shadow-inner ring-1 ring-white/10 sm:p-6 lg:p-7">
-              <h2 className="text-2xl font-extrabold uppercase tracking-wide text-white sm:text-3xl">
-                Estimate Your Solar Savings
-              </h2>
-              <p className="mt-3 max-w-xl text-sm leading-6 text-emerald-50/90 sm:text-base">
-                Enter your monthly electricity bill to calculate your potential savings.
-              </p>
+    <section className="bg-white py-16 sm:py-20">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+        <div className="grid items-stretch overflow-hidden bg-[#f9fbf6] lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="flex flex-col justify-center px-6 py-10 sm:px-10 lg:px-14">
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#69c84a]">
+              About VEXA EV
+            </p>
+            <h2 className="mt-3 max-w-xl text-4xl font-extrabold leading-tight tracking-tight text-slate-950 sm:text-5xl">
+              Driving Bangladesh Towards a Cleaner Future
+            </h2>
+            <p className="mt-6 max-w-xl text-base leading-8 text-slate-600">
+              VEXA EV is a homegrown electric car brand with a mission to make electric mobility
+              affordable and accessible for everyone. Our vehicles are designed for the city, built
+              for efficiency, and made for you.
+            </p>
 
-              <form className="mt-6 space-y-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="block">
-                    <span className="mb-2 block text-sm font-semibold text-emerald-50">
-                      Monthly Electricity Bill (BDT)
-                    </span>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      placeholder="e.g. 15,000"
-                      className="h-14 w-full rounded-lg border border-white/20 bg-white px-4 text-slate-900 outline-none placeholder:text-slate-400 focus:border-emerald-300 focus:ring-4 focus:ring-emerald-200/40"
-                    />
-                  </label>
-
-                  <label className="block">
-                    <span className="mb-2 block text-sm font-semibold text-emerald-50">
-                      Location
-                    </span>
-                    <div className="relative">
-                      <select className="h-14 w-full appearance-none rounded-lg border border-white/20 bg-white px-4 pr-11 text-slate-900 outline-none focus:border-emerald-300 focus:ring-4 focus:ring-emerald-200/40">
-                        <option>Select Location</option>
-                        <option>Dhaka</option>
-                        <option>Chattogram</option>
-                        <option>Khulna</option>
-                        <option>Rajshahi</option>
-                      </select>
-                      <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    </div>
-                  </label>
+            <div className="mt-8 space-y-5">
+              {[
+                ['Affordable Ownership', 'Low cost, easy EMI options'],
+                ['Environment Friendly', 'Zero emissions, better tomorrow'],
+                ['Smart & Reliable', 'Advanced technology, trusted performance'],
+                ['Local Support', 'Service centers & support across Bangladesh'],
+              ].map(([title, copy]) => (
+                <div key={title} className="flex items-start gap-4">
+                  <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#68ca45] text-white">
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 12l4 4L19 6" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-base font-bold text-slate-900">{title}</p>
+                    <p className="mt-1 text-sm text-slate-500">{copy}</p>
+                  </div>
                 </div>
-
-                <button
-                  type="button"
-                  className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-[#ffd54a] px-6 text-base font-semibold text-slate-900 shadow-[0_14px_30px_rgba(0,0,0,0.2)] transition-transform duration-200 hover:-translate-y-0.5 hover:bg-[#ffcf2f]"
-                >
-                  Calculate Savings
-                  <Calculator className="h-5 w-5" />
-                </button>
-              </form>
+              ))}
             </div>
 
-            <div className="rounded-[24px] bg-white p-5 shadow-[0_16px_40px_rgba(2,44,20,0.18)] ring-1 ring-black/5 sm:p-6 lg:p-7">
-              <h3 className="text-center text-lg font-extrabold uppercase tracking-wide text-emerald-700 sm:text-xl">
-                Your Estimated Result
-              </h3>
+            <div className="mt-9">
+              <Link
+                href="/about-us"
+                className="inline-flex min-h-12 items-center justify-center gap-2 bg-[#69c84a] px-6 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#57b73a]"
+              >
+                Learn More About Us
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          </div>
 
-              <div className="mt-5 grid overflow-hidden rounded-2xl border border-slate-200 bg-white md:grid-cols-3">
-                {items.map((item, index) => (
-                  <div
-                    key={index}
-                    className={`flex flex-col items-center px-4 py-6 text-center sm:px-6 ${
-                      index > 0 ? 'border-t border-slate-200 md:border-l md:border-t-0' : ''
-                    }`}
+          <div className="relative min-h-[360px] sm:min-h-[420px] lg:min-h-[520px]">
+            <Image
+              src="/image/slider/car2.webp"
+              alt="VEXA electric car"
+              fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-white/70 via-white/0 to-slate-900/8 lg:from-white/30" />
+
+            <div className="absolute bottom-6 left-6 right-6 bg-[#11171d] p-5 text-white shadow-[0_20px_50px_rgba(0,0,0,0.35)] sm:bottom-8 sm:left-8 sm:right-8 sm:p-6 lg:max-w-[420px]">
+              <div className="flex items-start gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center bg-[#69c84a]/12 text-[#69c84a]">
+                  <Calculator className="h-8 w-8" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold leading-tight">Calculate Your Savings</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-300">
+                    Save up to ৳ 5,000 - 7,000 per month compared to fuel cars.
+                  </p>
+                  <Link
+                    href="/contact-us"
+                    className="mt-4 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.08em] text-[#69c84a]"
                   >
-                    <div className="relative h-14 w-14 sm:h-16 sm:w-16">
-                      <Image
-                        src={item.icon}
-                        alt={item.description}
-                        fill
-                        sizes="64px"
-                        className="object-contain"
-                      />
-                    </div>
-
-                    <p className="mt-4 text-sm font-medium text-slate-600">
-                      {item.description}
-                    </p>
-                    <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-[1.8rem]">
-                      {item.title}
-                    </p>
-                  </div>
-                ))}
+                    Calculate Now
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+        <div className="py-14 sm:py-16">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#69c84a]">
+              Charging Made Easy
+            </p>
+            <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl">
+              Charge Anywhere, Anytime
+            </h2>
+            <div className="mx-auto mt-4 h-1 w-14 bg-[#69c84a]" />
+          </div>
 
+          <div className="mt-12 grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
+            {items.map((item, index) => {
+              const Icon = chargingIcons[item.key ?? 'home']
+
+              return (
+                <div key={`${item.title}-${index}`} className="text-center">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#69c84a]/10 text-[#69c84a]">
+                    <Icon className="h-8 w-8" />
+                  </div>
+                  <h3 className="mt-5 text-2xl font-bold tracking-tight text-slate-950">
+                    {item.title}
+                  </h3>
+                  <p className="mx-auto mt-3 max-w-[16rem] text-base leading-7 text-slate-500">
+                    {item.description}
+                  </p>
+                </div>
+              )
+            })}
+          </div>
+
+          <div className="mt-10 flex justify-center">
+            <Link
+              href="/services"
+              className="inline-flex min-h-12 items-center justify-center gap-2 bg-[#69c84a] px-7 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#57b73a]"
+            >
+              Find Charging Stations
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
