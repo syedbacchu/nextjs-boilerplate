@@ -1,10 +1,10 @@
 import { Metadata } from "next"
 import { constructMetadata } from "@/lib/seo"
-import HeroSlider from "@/components/ui/HeroSlider"
-import ServiceHomeSection from "@/features/home/components/ServiceHomeSection"
-import ProjectsHomeSection from "@/features/home/components/ProjectsHomeSection"
-import SavingsSection from "@/features/home/components/SavingsSection"
-import TestimonialsHomeSection from "@/features/home/components/TestimonialsHomeSection"
+import VexaevHeroSlider from "@/features/vexaev/components/VexaevHeroSlider";
+import VexaevServiceSection from "@/features/vexaev/components/VexaevServiceSection";
+import VexaevSavingsSection from "@/features/vexaev/components/VexaevSavingsSection";
+import VexaevProjectSection from "@/features/vexaev/components/VexaevProjectSection";
+import VexaevTestimonialSection from "@/features/vexaev/components/VexaevTestimonialSection";
 
 export async function generateMetadata(): Promise<Metadata> {
     return constructMetadata({
@@ -18,7 +18,7 @@ export default async function Page() {
     // Define your hero slides here
     const heroSlides = [
         {
-            image: "/image/slider/slider2.jpg",
+            image: "/image/slider/car3.png",
             title: "POWER YOUR FUTURE",
             highlightText: "WITH SOLAR ENERGY",
             subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
@@ -53,7 +53,7 @@ export default async function Page() {
             ]
         },
         {
-            image: "/image/slider/slider3.avif",
+            image: "/image/slider/car4.jpg",
             title: "POWER YOUR FUTURE",
             highlightText: "WITH SOLAR ENERGY",
             subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
@@ -88,7 +88,7 @@ export default async function Page() {
             ]
         },
         {
-            image: "/image/slider/slider1.jpeg",
+            image: "/image/slider/car2.webp",
             title: "POWER YOUR FUTURE",
             highlightText: "WITH SOLAR ENERGY",
             subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
@@ -127,10 +127,10 @@ export default async function Page() {
     return (
         <main className="w-full">
             {/* Hero Slider Section */}
-            <HeroSlider slides={heroSlides} autoSlideInterval={5000} />
+            <VexaevHeroSlider slides={heroSlides} autoSlideInterval={5000} />
 
             {/* Services Section */}
-            <ServiceHomeSection
+            <VexaevServiceSection
                 services={[
                     {
                         id: 1,
@@ -167,7 +167,7 @@ export default async function Page() {
             />
 
             {/* Savings/Benefits Section */}
-            <SavingsSection
+            <VexaevSavingsSection
                 items={[
                     {
                         icon: "/image/service/money.png",
@@ -187,7 +187,7 @@ export default async function Page() {
                 ]}
             />
 
-            <ProjectsHomeSection
+            <VexaevProjectSection
                 projects={[
                     {
                         id: 1,
@@ -213,7 +213,7 @@ export default async function Page() {
                 ]}
             />
 
-            <TestimonialsHomeSection
+            <VexaevTestimonialSection
                 testimonials={[
                     {
                         id: 1,

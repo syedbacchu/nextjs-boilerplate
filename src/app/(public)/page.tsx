@@ -20,7 +20,7 @@ export default async function Page() {
         {
             image: "/image/slider/slider2.jpg",
             title: "POWER YOUR FUTURE",
-            highlightText: "WITH SOLAR ENERGY",
+            highlightText: " SOLAR ENERGY",
             subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
             buttons: [
                 {

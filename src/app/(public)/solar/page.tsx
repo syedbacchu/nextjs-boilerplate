@@ -1,10 +1,10 @@
 import { Metadata } from "next"
 import { constructMetadata } from "@/lib/seo"
-import HeroSlider from "@/components/ui/HeroSlider"
-import ServiceHomeSection from "@/features/home/components/ServiceHomeSection"
-import ProjectsHomeSection from "@/features/home/components/ProjectsHomeSection"
-import SavingsSection from "@/features/home/components/SavingsSection"
-import TestimonialsHomeSection from "@/features/home/components/TestimonialsHomeSection"
+import SolarHeroSlider from "@/features/solar/components/SolarHeroSlider";
+import SolarServiceSection from "@/features/solar/components/SolarServiceSection";
+import SolarSavingsSection from "@/features/solar/components/SolarSavingsSection";
+import ProjectsSolarSection from "@/features/solar/components/ProjectsSolarSection";
+import TestimonialsSolarSection from "@/features/solar/components/TestimonialsSolarSection";
 
 export async function generateMetadata(): Promise<Metadata> {
     return constructMetadata({
@@ -17,41 +17,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page() {
     // Define your hero slides here
     const heroSlides = [
-        {
-            image: "/image/slider/slider2.jpg",
-            title: "POWER YOUR FUTURE",
-            highlightText: "WITH SOLAR ENERGY",
-            subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
-            buttons: [
-                {
-                    text: "Get Free Consultation",
-                    href: "/contact-us",
-                    variant: "primary" as const
-                },
-                {
-                    text: "View Our Projects",
-                    href: "/services",
-                    variant: "secondary" as const
-                }
-            ],
-            trustBadges: [
-                {
-                    icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
-                    heading: "500+ Successful Projects",
-                    subHeading: "Completed installations"
-                },
-                {
-                    icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z",
-                    heading: "5–10 Year Warranty",
-                    subHeading: "Guaranteed performance"
-                },
-                {
-                    icon: "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6",
-                    heading: "High ROI in 3–5 Years",
-                    subHeading: "Maximum returns"
-                }
-            ]
-        },
         {
             image: "/image/slider/slider3.avif",
             title: "POWER YOUR FUTURE",
@@ -87,6 +52,42 @@ export default async function Page() {
                 }
             ]
         },
+        {
+            image: "/image/slider/slider2.jpg",
+            title: "POWER YOUR FUTURE",
+            highlightText: "WITH SOLAR ENERGY",
+            subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
+            buttons: [
+                {
+                    text: "Get Free Consultation",
+                    href: "/contact-us",
+                    variant: "primary" as const
+                },
+                {
+                    text: "View Our Projects",
+                    href: "/services",
+                    variant: "secondary" as const
+                }
+            ],
+            trustBadges: [
+                {
+                    icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
+                    heading: "500+ Successful Projects",
+                    subHeading: "Completed installations"
+                },
+                {
+                    icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z",
+                    heading: "5–10 Year Warranty",
+                    subHeading: "Guaranteed performance"
+                },
+                {
+                    icon: "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6",
+                    heading: "High ROI in 3–5 Years",
+                    subHeading: "Maximum returns"
+                }
+            ]
+        },
+
         {
             image: "/image/slider/slider1.jpeg",
             title: "POWER YOUR FUTURE",
@@ -127,10 +128,10 @@ export default async function Page() {
     return (
         <main className="w-full">
             {/* Hero Slider Section */}
-            <HeroSlider slides={heroSlides} autoSlideInterval={5000} />
+            <SolarHeroSlider slides={heroSlides} autoSlideInterval={5000} />
 
             {/* Services Section */}
-            <ServiceHomeSection
+            <SolarServiceSection
                 services={[
                     {
                         id: 1,
@@ -167,7 +168,7 @@ export default async function Page() {
             />
 
             {/* Savings/Benefits Section */}
-            <SavingsSection
+            <SolarSavingsSection
                 items={[
                     {
                         icon: "/image/service/money.png",
@@ -187,7 +188,7 @@ export default async function Page() {
                 ]}
             />
 
-            <ProjectsHomeSection
+            <ProjectsSolarSection
                 projects={[
                     {
                         id: 1,
@@ -213,7 +214,7 @@ export default async function Page() {
                 ]}
             />
 
-            <TestimonialsHomeSection
+            <TestimonialsSolarSection
                 testimonials={[
                     {
                         id: 1,
