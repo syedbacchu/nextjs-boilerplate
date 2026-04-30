@@ -29,3 +29,25 @@ export async function getHomePageSliderAction(): Promise<SliderListResponse> {
     return response as unknown as SliderListResponse
 }
 
+export async function getSolarPageSliderAction(): Promise<SliderListResponse> {
+    const response = await SliderService.publicList(
+        1,
+        '',
+        1, // status: 1 = active
+        undefined, // type: not specified
+        2, // site_type: 2 = solar page
+    )
+    return response as unknown as SliderListResponse
+}
+
+export async function getVexaevPageSliderAction(): Promise<SliderListResponse> {
+    const response = await SliderService.publicList(
+        1,
+        '',
+        1, // status: 1 = active
+        undefined, // type: not specified
+        3, // site_type: 3 = vexaev page
+    )
+    return response as unknown as SliderListResponse
+}
+

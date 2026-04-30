@@ -55,13 +55,13 @@ export function transformSliderToHeroSlide(slider: SliderListItem): HeroSlide {
     }
 }
 
-export function getDefaultHeroSlides(): HeroSlide[] {
+export function getDefaultSolarHeroSlides(): HeroSlide[] {
     return [
         {
-            image: "/image/slider/slider2.jpg",
+            image: "/image/slider/slider3.avif",
             tagline: undefined,
             title: "POWER YOUR FUTURE",
-            highlightText: " SOLAR ENERGY",
+            highlightText: "WITH SOLAR ENERGY",
             subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
             buttons: [
                 {
@@ -99,7 +99,7 @@ export function getDefaultHeroSlides(): HeroSlide[] {
             ]
         },
         {
-            image: "/image/slider/slider3.avif",
+            image: "/image/slider/slider2.jpg",
             tagline: undefined,
             title: "POWER YOUR FUTURE",
             highlightText: "WITH SOLAR ENERGY",

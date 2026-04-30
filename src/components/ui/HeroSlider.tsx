@@ -8,16 +8,19 @@ export interface HeroButton {
   text: string
   href: string
   variant: 'primary' | 'secondary'
+  color?: string
 }
 
 export interface TrustBadge {
   icon: string
   heading: string
   subHeading: string
+  image?: string | null
 }
 
 export interface HeroSlide {
   image: string
+  tagline?: string
   title: string
   highlightText: string
   subtitle: string
@@ -110,6 +113,13 @@ export default function HeroSlider({ slides, autoSlideInterval = 5000 }: HeroSli
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           {/* Left Content */}
           <div className="space-y-4 lg:max-w-2xl lg:space-y-5">
+            {/* Tagline */}
+            {slide.tagline && (
+              <div className="inline-flex items-center rounded-full border border-green-600/30 bg-green-50 px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] text-green-700">
+                {slide.tagline}
+              </div>
+            )}
+
             {/* Title Section */}
             <div className="space-y-3">
               <h1 className="text-4xl font-bold tracking-tight text-slate-950 sm:text-[3.2rem] lg:text-[3.25rem] lg:leading-[0.95]">
@@ -130,10 +140,16 @@ export default function HeroSlider({ slides, autoSlideInterval = 5000 }: HeroSli
                   key={index}
                   href={button.href}
                   className={`inline-flex items-center justify-center rounded-lg px-7 py-3 text-base font-semibold shadow-lg transition-all duration-300 hover:scale-[1.02] ${
-                    button.variant === 'primary'
+                    button.color
+                      ? 'text-white hover:shadow-xl'
+                      : button.variant === 'primary'
                       ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40'
                       : 'border-2 border-emerald-200 bg-white/75 text-slate-800 backdrop-blur-sm shadow-sm hover:bg-white hover:text-green-600'
                   }`}
+                  style={button.color ? {
+                    backgroundColor: button.color,
+                    boxShadow: `0 10px 15px -3px ${button.color}66, 0 4px 6px -2px ${button.color}66`
+                  } : undefined}
                 >
                   {button.text}
                   {button.variant === 'primary' && (
@@ -150,11 +166,21 @@ export default function HeroSlider({ slides, autoSlideInterval = 5000 }: HeroSli
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 {slide.trustBadges.map((badge, index) => (
                   <div key={index} className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/70 px-4 py-2.5 shadow-sm backdrop-blur-sm">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-green-500/15 text-green-600">
-                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={badge.icon} />
-                      </svg>
-                    </div>
+                    {badge.image ? (
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full">
+                        <img
+                          src={badge.image}
+                          alt={badge.heading}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-green-500/15 text-green-600">
+                        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={badge.icon} />
+                        </svg>
+                      </div>
+                    )}
                     <div>
                       <p className="text-base font-bold text-slate-900">{badge.heading}</p>
                       <p className="text-sm text-slate-600">{badge.subHeading}</p>

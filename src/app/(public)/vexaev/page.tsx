@@ -4,6 +4,8 @@ import VexaevHeroSlider from "@/features/vexaev/components/VexaevHeroSlider";
 import VexaevServiceSection from "@/features/vexaev/components/VexaevServiceSection";
 import VexaevSavingsSection from "@/features/vexaev/components/VexaevSavingsSection";
 import VexaevTestimonialSection from "@/features/vexaev/components/VexaevTestimonialSection";
+import { getVexaevPageSliderAction } from "@/features/slider";
+import { transformSliderToHeroSlide, getDefaultVexaevHeroSlides } from "@/features/vexaev/helpers/slider.helper";
 
 export async function generateMetadata(): Promise<Metadata> {
     return constructMetadata({
@@ -14,129 +16,21 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-    // Define your hero slides here
-    const heroSlides = [
-        {
-            image: "/image/slider/car3.png",
-            title: "VEXA",
-            highlightText: "EV",
-            subtitle: "No fuel. No tension.\nJust pure electric.",
-            buttons: [
-                {
-                    text: "Explore Models",
-                    href: "/services",
-                    variant: "primary" as const
-                },
-                {
-                    text: "Book a Test Drive",
-                    href: "/contact-us",
-                    variant: "secondary" as const
-                }
-            ],
-            trustBadges: [
-                {
-                    icon: "M7 7h10M9 4h6m-7 3l-1 11h10L15 7m-8 6h10m-8 4h6",
-                    heading: "120 - 180 KM",
-                    subHeading: "Range"
-                },
-                {
-                    icon: "M13 2L6 14h5l-1 8 8-14h-5l0-6z",
-                    heading: "Home Charging",
-                    subHeading: "Easy & Convenient"
-                },
-                {
-                    icon: "M9 7h6m-6 4h8m-8 4h6M8 3h8l3 4v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7l3-4z",
-                    heading: "2 Years",
-                    subHeading: "Warranty"
-                },
-                {
-                    icon: "M12 14a3 3 0 100-6 3 3 0 000 6zm0 0l5.5 3.5M4.5 10a7.5 7.5 0 1115 0",
-                    heading: "60 KM/H",
-                    subHeading: "Top Speed"
-                }
-            ]
-        },
-        {
-            image: "/image/slider/car4.jpg",
-            title: "VEXA",
-            highlightText: "EV",
-            subtitle: "No fuel. No tension.\nJust pure electric.",
-            buttons: [
-                {
-                    text: "Explore Models",
-                    href: "/services",
-                    variant: "primary" as const
-                },
-                {
-                    text: "Book a Test Drive",
-                    href: "/contact-us",
-                    variant: "secondary" as const
-                }
-            ],
-            trustBadges: [
-                {
-                    icon: "M7 7h10M9 4h6m-7 3l-1 11h10L15 7m-8 6h10m-8 4h6",
-                    heading: "120 - 180 KM",
-                    subHeading: "Range"
-                },
-                {
-                    icon: "M13 2L6 14h5l-1 8 8-14h-5l0-6z",
-                    heading: "Home Charging",
-                    subHeading: "Easy & Convenient"
-                },
-                {
-                    icon: "M9 7h6m-6 4h8m-8 4h6M8 3h8l3 4v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7l3-4z",
-                    heading: "2 Years",
-                    subHeading: "Warranty"
-                },
-                {
-                    icon: "M12 14a3 3 0 100-6 3 3 0 000 6zm0 0l5.5 3.5M4.5 10a7.5 7.5 0 1115 0",
-                    heading: "60 KM/H",
-                    subHeading: "Top Speed"
-                }
-            ]
-        },
-        {
-            image: "/image/slider/car2.webp",
-            title: "VEXA",
-            highlightText: "EV",
-            subtitle: "No fuel. No tension.\nJust pure electric.",
-            buttons: [
-                {
-                    text: "Explore Models",
-                    href: "/services",
-                    variant: "primary" as const
-                },
-                {
-                    text: "Book a Test Drive",
-                    href: "/contact-us",
-                    variant: "secondary" as const
-                }
-            ],
-            trustBadges: [
-                {
-                    icon: "M7 7h10M9 4h6m-7 3l-1 11h10L15 7m-8 6h10m-8 4h6",
-                    heading: "120 - 180 KM",
-                    subHeading: "Range"
-                },
-                {
-                    icon: "M13 2L6 14h5l-1 8 8-14h-5l0-6z",
-                    heading: "Home Charging",
-                    subHeading: "Easy & Convenient"
-                },
-                {
-                    icon: "M9 7h6m-6 4h8m-8 4h6M8 3h8l3 4v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7l3-4z",
-                    heading: "2 Years",
-                    subHeading: "Warranty"
-                },
-                {
-                    icon: "M12 14a3 3 0 100-6 3 3 0 000 6zm0 0l5.5 3.5M4.5 10a7.5 7.5 0 1115 0",
-                    heading: "60 KM/H",
-                    subHeading: "Top Speed"
-                }
-            ]
+    // Fetch slider data from API
+    let heroSlides = getDefaultVexaevHeroSlides()
+
+    try {
+        const sliderResponse = await getVexaevPageSliderAction()
+
+        if (sliderResponse?.success && sliderResponse?.data?.data?.length > 0) {
+            heroSlides = sliderResponse.data.data
+                .filter(slider => slider.photo) // Only include sliders with photos
+                .map(transformSliderToHeroSlide)
         }
-    ]
+    } catch (error) {
+        console.error('Error fetching slider data:', error)
+        // Fall back to default slides
+    }
 
     return (
         <main className="w-full">
