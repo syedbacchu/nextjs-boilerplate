@@ -22,6 +22,7 @@ const navLinks: NavItem[] = [
             { name: 'Main', href: '/' },
             { name: 'Solar', href: '/solar' },
             { name: 'Vexaev', href: '/vexaev' },
+            { name: 'Battery', href: '/battery-water' },
         ],
     },
     { name: 'Features', href: '/features' },
@@ -33,7 +34,7 @@ const navLinks: NavItem[] = [
         name: 'Support',
         children: [
             { name: 'Contact Us', href: '/contact-us' },
-            { name: 'FAQ', href: '/faqs' },
+            { name: 'FAQ', href: '/faq' },
             { name: 'Blogs', href: '/blogs' },
         ],
     },

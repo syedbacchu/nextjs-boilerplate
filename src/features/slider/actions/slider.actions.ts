@@ -51,3 +51,13 @@ export async function getVexaevPageSliderAction(): Promise<SliderListResponse> {
     return response as unknown as SliderListResponse
 }
 
+export async function getBatteryPageSliderAction(): Promise<SliderListResponse> {
+    const response = await SliderService.publicList(
+        1,
+        '',
+        1, // status: 1 = active
+        undefined, // type: not specified
+        5, // site_type: 5 = battery page
+    )
+    return response as unknown as SliderListResponse
+}
