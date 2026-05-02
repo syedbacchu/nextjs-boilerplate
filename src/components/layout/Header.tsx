@@ -26,8 +26,8 @@ const navLinks: NavItem[] = [
     },
     { name: 'Features', href: '/features' },
     { name: 'Service', href: '/services' },
-    { name: 'Portfolio', href: '/portfolio' },
-    { name: 'Teams', href: '/teams' },
+    { name: 'Project', href: '/projects' },
+    { name: 'Teams', href: '/team' },
     { name: 'About Us', href: '/about-us' },
     {
         name: 'Support',

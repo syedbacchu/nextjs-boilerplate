@@ -4,7 +4,15 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { SingleServiceItem } from '@/features/service'
 
+function isLocalAsset(url: string) {
+    return url?.startsWith('http://localhost:8000/') || url?.startsWith('http://127.0.0.1:8000/')
+}
+
+const DEFAULT_SERVICE_IMAGE = '/image/service/service1.png'
+
 export default function ServicesCard({ item }: { item: SingleServiceItem }) {
+    const imageSrc = item.image?.trim() || DEFAULT_SERVICE_IMAGE
+    const unoptimized = isLocalAsset(imageSrc)
 
     return (
         <Link
@@ -14,9 +22,12 @@ export default function ServicesCard({ item }: { item: SingleServiceItem }) {
             {/* Service Image */}
             <div className="mb-5 h-24 w-full relative">
                 <Image
-                    src={item.image}
+                    src={imageSrc}
                     alt={item.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    quality={95}
+                    unoptimized={unoptimized}
                     className="object-contain"
                 />
             </div>

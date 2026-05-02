@@ -1,4 +1,3 @@
-// Home feature types
-export interface HomeData {
-    // Add home-specific types here as needed
-}
+// Re-export all home types
+export * from './home.types'
+

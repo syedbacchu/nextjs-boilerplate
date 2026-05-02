@@ -6,11 +6,13 @@ export async function getServicePublicListAction(
     page: number,
     search: string,
     is_featured?: number | string,
+    site_type?: number | string,
 ): Promise<ServiceListResponse> {
     const response = await ServiceService.publicList(
         page,
         search,
         is_featured,
+        site_type
     )
     return response as unknown as ServiceListResponse
 }

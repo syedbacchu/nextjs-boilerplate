@@ -1,4 +1,5 @@
 export * from './actions/home.actions'
-export * from './types'
+export * from './types/home.types'
 export * from './services/home.service'
 export * from './helpers/slider.helper'
+export * from './helpers/home-data.helper'

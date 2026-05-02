@@ -1,23 +1,21 @@
 import { request } from '@/lib/http/request'
 
-export const ServiceService = {
+export const TeamService = {
     async publicList(
         page: number = 1,
         search: string = '',
-        is_featured?: number | string,
-        site_type?: number | string,
     ) {
         return request({
             method: 'GET',
-            url: '/services',
-            params: { page, search, is_featured, site_type },
+            url: '/team',
+            params: { page, search },
         })
     },
 
     details(slug: string) {
         return request({
             method: 'GET',
-            url: `/services/${slug}`,
+            url: `/team/${slug}`,
         })
     },
 }

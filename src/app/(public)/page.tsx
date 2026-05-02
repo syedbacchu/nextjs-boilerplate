@@ -6,7 +6,21 @@ import ProjectsHomeSection from "@/features/home/components/ProjectsHomeSection"
 import SavingsSection from "@/features/home/components/SavingsSection"
 import TestimonialsHomeSection from "@/features/home/components/TestimonialsHomeSection"
 import { getHomePageSliderAction } from "@/features/slider"
-import { transformSliderToHeroSlide, getDefaultHeroSlides } from "@/features/home/helpers/slider.helper"
+import { getHomeDataAction } from "@/features/home"
+import {
+    transformSliderToHeroSlide,
+    getDefaultHeroSlides
+} from "@/features/home/helpers/slider.helper"
+import {
+    transformHomeService,
+    transformHomeProject,
+    transformHomeTestimonial,
+    transformHomeStat,
+    getDefaultServices,
+    getDefaultProjects,
+    getDefaultTestimonials,
+    getDefaultStats
+} from "@/features/home/helpers/home-data.helper"
 
 export async function generateMetadata(): Promise<Metadata> {
     return constructMetadata({
@@ -33,6 +47,40 @@ export default async function Page() {
         // Fall back to default slides
     }
 
+    // Fetch home page data from API
+    let services = getDefaultServices()
+    let projects = getDefaultProjects()
+    let testimonials = getDefaultTestimonials()
+    let stats = getDefaultStats()
+
+    try {
+        const homeResponse = await getHomeDataAction()
+
+        if (homeResponse?.success && homeResponse?.data) {
+            const { service_list, project_list, testimonial_list, stat_list } = homeResponse.data
+
+            // Use API data if available, otherwise keep defaults
+            if (service_list && service_list.length > 0) {
+                services = service_list.map(transformHomeService)
+            }
+
+            if (project_list && project_list.length > 0) {
+                projects = project_list.slice(0, 3).map(transformHomeProject)
+            }
+
+            if (testimonial_list && testimonial_list.length > 0) {
+                testimonials = testimonial_list.slice(0, 3).map(transformHomeTestimonial)
+            }
+
+            if (stat_list && stat_list.length > 0) {
+                stats = stat_list.map(transformHomeStat)
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching home data:', error)
+        // Fall back to default data
+    }
+
     return (
         <main className="w-full">
             {/* Hero Slider Section */}
@@ -40,111 +88,17 @@ export default async function Page() {
 
             {/* Services Section */}
             <ServiceHomeSection
-                services={[
-                    {
-                        id: 1,
-                        slug: "residential-solar",
-                        image: "/image/service/service1.png",
-                        title: "Residential Solar",
-                        description: "Power your home with clean, renewable energy and reduce your electricity bills by up to 80%."
-                    },
-                    {
-                        id: 2,
-                        slug: "commercial-solar",
-                        image: "/image/service/service1.png",
-                        title: "Commercial Solar",
-                        description: "Scalable solar solutions for businesses of all sizes. Cut operational costs and boost sustainability."
-                    },
-                    {
-                        id: 3,
-                        slug: "industrial-solar",
-                        image: "/image/service/service1.png",
-                        title: "Industrial Solar",
-                        description: "High-capacity solar systems designed for industrial facilities and manufacturing plants."
-                    },
-                    {
-                        id: 4,
-                        slug: "solar-irrigation",
-                        image: "/image/service/service1.png",
-                        title: "Solar Irrigation",
-                        description: "Comprehensive maintenance services to keep your solar system operating at peak efficiency."
-                    },
-
-                ]}
+                services={services}
                 sectionTitle="Our Services"
                 sectionDescription="Comprehensive solar energy solutions tailored to meet your specific needs and maximize your energy savings"
             />
 
             {/* Savings/Benefits Section */}
-            <SavingsSection
-                items={[
-                    {
-                        icon: "/image/service/money.png",
-                        title: "10 kW",
-                        description: "Recommended System Size"
-                    },
-                    {
-                        icon: "/image/service/solar-panel.png",
-                        title: "BDT 8000",
-                        description: "Estimated Monthly Savings"
-                    },
-                    {
-                        icon: "/image/service/time-left.png",
-                        title: "4.2 Years",
-                        description: "Payback Period"
-                    }
-                ]}
-            />
+            <SavingsSection items={stats} />
 
-            <ProjectsHomeSection
-                projects={[
-                    {
-                        id: 1,
-                        title: "50KW Industrial Project",
-                        location: "Gazipur",
-                        savings: "BDT 50,000/month",
-                        image: "/image/slider/slider2.jpg",
-                    },
-                    {
-                        id: 2,
-                        title: "100KW Commercial Project",
-                        location: "Dhaka",
-                        savings: "BDT 95,000/month",
-                        image: "/image/slider/slider3.avif",
-                    },
-                    {
-                        id: 3,
-                        title: "5KW Residential Project",
-                        location: "Chattogram",
-                        savings: "BDT 5,000/month",
-                        image: "/image/slider/slider1.jpeg",
-                    },
-                ]}
-            />
+            <ProjectsHomeSection projects={projects} />
 
-            <TestimonialsHomeSection
-                testimonials={[
-                    {
-                        id: 1,
-                        quote: "Our factory electricity bill reduced by almost 40%. Greensolar provided excellent service.",
-                        authorRole: "Factory Owner, Gazipur",
-                        initials: "FO",
-                    },
-                    {
-                        id: 2,
-                        quote: "Very professional team and smooth installation. Highly recommended!",
-                        authorRole: "Business Owner, Dhaka",
-                        initials: "BO",
-                    },
-                    {
-                        id: 3,
-                        quote: "Best decision for my home. Now I enjoy worry-free electricity and huge savings.",
-                        authorRole: "Home Owner, Chattogram",
-                        initials: "HO",
-                    },
-                ]}
-            />
-
+            <TestimonialsHomeSection testimonials={testimonials} />
         </main>
     )
 }
