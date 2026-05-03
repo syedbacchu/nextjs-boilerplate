@@ -1,14 +1,7 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
 import { FaFacebookF, FaGlobe, FaLinkedinIn, FaMapMarkerAlt, FaPhoneAlt, FaWhatsapp, FaYoutube } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
-
-const LeadFormModals = dynamic(() => import('@/features/lead/components/LeadFormModals'), {
-    loading: () => null,
-})
 
 const quickLinks = [
     { label: 'Home', href: '/' },
@@ -75,7 +68,18 @@ export default function Footer() {
                         </div>
 
                         <div className="mt-4 flex flex-col gap-2">
-                            <LeadFormModals />
+                            <Link
+                                href="/customer-lead"
+                                className="inline-flex items-center justify-center rounded-md bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white hover:text-[#04453d]"
+                            >
+                                Customer Lead Form
+                            </Link>
+                            <Link
+                                href="/company-details"
+                                className="inline-flex items-center justify-center rounded-md bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white hover:text-[#04453d]"
+                            >
+                                Company Details Form
+                            </Link>
                         </div>
                     </div>
 

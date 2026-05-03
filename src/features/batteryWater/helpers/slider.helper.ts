@@ -36,7 +36,7 @@ export function transformSliderToHeroSlide(slider: SliderListItem): HeroSlide {
   ]
 
   return {
-    image: slider.photo || '/image/battery-water-default.png',
+    image: slider.photo || '/image/slider/battery.webp',
     title: title,
     subtitle: subtitle,
     description: description,
@@ -48,7 +48,7 @@ export function transformSliderToHeroSlide(slider: SliderListItem): HeroSlide {
 export function getDefaultBatteryHeroSlides(): HeroSlide[] {
   return [
     {
-      image: "/image/battery-water-product.png",
+      image: "/image/slider/battery.webp",
       title: "Battery Life+",
       subtitle: "ব্যাটারি জীবন সম্প্রসারণ",
       description: "প্যারামিটার অনুযায়ী সঠিক পানি",
@@ -72,7 +72,7 @@ export function getDefaultBatteryHeroSlides(): HeroSlide[] {
       ]
     },
     {
-      image: "/image/battery-water-product.png",
+      image: "/image/slider/battery.webp",
       title: "Premium Quality",
       subtitle: "সর্বোচ্চ মানের পানি",
       description: "দীর্ঘস্থায়ী ব্যাটারি পারফরম্যান্স",
@@ -96,7 +96,7 @@ export function getDefaultBatteryHeroSlides(): HeroSlide[] {
       ]
     },
     {
-      image: "/image/battery-water-product.png",
+      image: "/image/slider/battery.webp",
       title: "Trusted Brand",
       subtitle: "বিশ্বস্ত মানের",
       description: "হাজার হাজার সন্তুষ্ট গ্রাহক",

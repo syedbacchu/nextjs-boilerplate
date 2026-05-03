@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { submitCompanyDetails, CompanyDetailsData } from '../services/lead.service'
 
@@ -10,6 +11,7 @@ interface CompanyDetailsFormProps {
 }
 
 export default function CompanyDetailsForm({ onSuccess, onCancel }: CompanyDetailsFormProps) {
+    const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const [formData, setFormData] = useState<CompanyDetailsData>({
@@ -120,7 +122,13 @@ export default function CompanyDetailsForm({ onSuccess, onCancel }: CompanyDetai
 
             if (result.success) {
                 toast.success(result.message || 'Form submitted successfully!')
-                onSuccess?.()
+                setTimeout(() => {
+                    if (onSuccess) {
+                        onSuccess()
+                    } else {
+                        router.push('/thank-you')
+                    }
+                }, 1500)
             } else {
                 toast.error(result.error || 'Failed to submit form')
             }
