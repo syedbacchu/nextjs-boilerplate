@@ -28,7 +28,7 @@ function StarRating({ rating }: { rating: number }) {
             ))}
         </div>
     )
-)
+}
 
 export default function TestimonialCard({ item }: { item: TestimonialListItem }) {
     const imageSrc = item.image?.trim() ? item.image : DEFAULT_TESTIMONIAL_IMAGE
