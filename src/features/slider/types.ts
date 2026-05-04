@@ -19,6 +19,7 @@ export interface SliderListItem {
     title: string | null
     subtitle: string | null
     tagline: string | null
+    description: string | null
     photo: string
     mobile_banner: string | null
     link: string | null

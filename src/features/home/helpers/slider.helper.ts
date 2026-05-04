@@ -50,6 +50,7 @@ export function transformSliderToHeroSlide(slider: SliderListItem): HeroSlide {
         title: mainTitle,
         highlightText: highlightText,
         subtitle: subtitle,
+        description: slider.description || undefined, // Added description field
         buttons: buttons,
         trustBadges: trustBadges
     }
@@ -63,6 +64,7 @@ export function getDefaultHeroSlides(): HeroSlide[] {
             title: "POWER YOUR FUTURE",
             highlightText: " SOLAR ENERGY",
             subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
+            description: "We provide complete solar solutions including design, installation, and maintenance for residential, commercial, and industrial properties across Bangladesh.",
             buttons: [
                 {
                     text: "Get Free Consultation",
@@ -104,6 +106,7 @@ export function getDefaultHeroSlides(): HeroSlide[] {
             title: "POWER YOUR FUTURE",
             highlightText: "WITH SOLAR ENERGY",
             subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
+            description: "Our expert team delivers customized solar energy systems tailored to your specific needs and budget requirements.",
             buttons: [
                 {
                     text: "Get Free Consultation",
@@ -145,6 +148,7 @@ export function getDefaultHeroSlides(): HeroSlide[] {
             title: "POWER YOUR FUTURE",
             highlightText: "WITH SOLAR ENERGY",
             subtitle: "Save up to 80% on your electricity bills with reliable, cost-effective solar solutions in Bangladesh.",
+            description: "Join thousands of satisfied customers who have already made the switch to clean, renewable solar energy.",
             buttons: [
                 {
                     text: "Get Free Consultation",
