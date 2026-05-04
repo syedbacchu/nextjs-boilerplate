@@ -1,6 +1,7 @@
 'use client'
 
 import { Check, Shield, Droplet, Flame, AlertTriangle } from 'lucide-react'
+import {HomeFeature} from "@/features/home";
 
 interface Feature {
   title: string
@@ -11,6 +12,7 @@ interface Feature {
 interface ServicesSectionProps {
   sectionDescription?: string
   features?: Feature[]
+  apiFeatures?: HomeFeature[]
 }
 
 const defaultFeatures: Feature[] = [
@@ -47,7 +49,16 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 export default function BatteryServiceSection({
   sectionDescription = 'নিরাপদ, বিশুদ্ধ ও কার্যকর সমাধান যা ব্যাটারির দীর্ঘস্থায়ী পারফরম্যান্স নিশ্চিত করে',
   features = defaultFeatures,
+  apiFeatures,
 }: ServicesSectionProps) {
+  // Map API features to component features if provided
+  const displayFeatures = apiFeatures && apiFeatures.length > 0
+    ? apiFeatures.map((apiFeature) => ({
+        title: apiFeature.title,
+        description: apiFeature.short_description || apiFeature.description,
+        icon: 'shield', // Default icon for API features
+      }))
+    : features
   return (
     <section className="bg-white py-14 sm:py-18">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -64,7 +75,7 @@ export default function BatteryServiceSection({
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {features.map((feature, index) => {
+          {displayFeatures.map((feature, index) => {
             const IconComponent = iconMap[feature.icon || 'check'] || Check
 
             return (

@@ -56,6 +56,27 @@ export interface HomeTestimonial {
     site_type: number
 }
 
+export interface HomeFeature {
+    id: number
+    title: string
+    slug: string
+    short_description: string
+    description: string
+    thumbnail: string | null
+    image: string | null
+    link: string | null
+    category_id: number | null
+    sort_order: number
+    is_featured: boolean
+    status: number
+    site_type: number
+    category: {
+        id: number
+        name: string
+        slug: string
+    } | null
+}
+
 export interface HomeStat {
     id: number
     image: string | null
@@ -70,6 +91,7 @@ export interface HomeStat {
 
 export interface HomeDataResponse {
     service_list: HomeService[]
+    feature_list: HomeFeature[]
     project_list: HomeProject[]
     testimonial_list: HomeTestimonial[]
     stat_list: HomeStat[]

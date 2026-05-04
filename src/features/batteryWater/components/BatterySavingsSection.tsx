@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { Droplet, Zap, Wrench, Shield } from 'lucide-react'
+import {HomeStat} from "@/features/home";
 
 export interface SavingsItem {
   title: string
@@ -15,6 +16,7 @@ interface SavingsSectionProps {
   productImage?: string
   sectionTitle?: string
   sectionSubtitle?: string
+  stats?: HomeStat[]
 }
 
 const defaultSteps = [
@@ -52,12 +54,20 @@ export default function BatterySavingsSection({
   productImage = '/image/slider/battery_slider.jpg',
   sectionTitle = 'কখন ব্যবহার করবেন?',
   sectionSubtitle = 'নিয়মিত ব্যাটারির পানি চেক করুন এবং প্রয়োজন অনুযায়ী Battery Life+ ব্যবহার করুন',
+  stats,
 }: SavingsSectionProps) {
-  const steps = items?.map((item) => ({
-    icon: item.icon || 'droplet',
-    title: item.title,
-    subtitle: item.description,
-  })) || defaultSteps
+  // Use stats from API if available, otherwise use items or default steps
+  const steps = stats && stats.length > 0
+    ? stats.map((stat, index) => ({
+        icon: ['droplet', 'zap', 'wrench', 'shield'][index % 4],
+        title: stat.title,
+        subtitle: stat.subtitle,
+      }))
+    : items?.map((item) => ({
+        icon: item.icon || 'droplet',
+        title: item.title,
+        subtitle: item.description,
+      })) || defaultSteps
 
   return (
     <section className="bg-white py-4 sm:py-6">

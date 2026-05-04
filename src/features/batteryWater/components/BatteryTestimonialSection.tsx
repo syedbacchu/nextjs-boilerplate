@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { BatteryCharging, CircleAlert, Droplet, ShieldCheck, ShoppingCart } from 'lucide-react'
+import {HomeService} from "@/features/home";
 
 interface UsageStep {
   number: string
@@ -18,6 +19,7 @@ interface BatteryUsageSectionProps {
   ctaDescription?: string
   ctaButtonText?: string
   ctaButtonHref?: string
+  services?: HomeService[]
 }
 
 const defaultSteps: UsageStep[] = [
@@ -63,6 +65,7 @@ export default function BatteryTestimonialSection({
   ctaDescription = 'Battery Life+ ব্যাটারির পানি ব্যবহার করে ব্যাটারির আয়ু বাড়ান ও সর্বোচ্চ পারফরম্যান্স নিশ্চিত করুন',
   ctaButtonText = 'Buy Now',
   ctaButtonHref = '/contact-us',
+  services,
 }: BatteryUsageSectionProps) {
   return (
     <section className="bg-white py-8 sm:py-10">
@@ -106,6 +109,42 @@ export default function BatteryTestimonialSection({
             )
           })}
         </div>
+
+        {/* Services Section */}
+        {services && services.length > 0 && (
+          <div className="mt-12">
+            <h3 className="text-center text-xl font-bold text-slate-950 sm:text-2xl">
+              আমাদের সেবাসমূহ
+            </h3>
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {services.map((service) => (
+                <div
+                  key={service.id}
+                  className="rounded-[20px] border border-slate-200 bg-white p-6 shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-transform duration-300 hover:-translate-y-1"
+                >
+                  {service.thumbnail && (
+                    <div className="relative mb-4 h-48 w-full overflow-hidden rounded-[16px] bg-slate-100">
+                      <Image
+                        src={service.thumbnail}
+                        alt={service.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover"
+                        unoptimized={service.thumbnail?.startsWith('http://localhost') || service.thumbnail?.startsWith('http://127.0.0.1')}
+                      />
+                    </div>
+                  )}
+                  <h4 className="text-lg font-bold text-slate-900">
+                    {service.title}
+                  </h4>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    {service.short_description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mt-8 overflow-hidden rounded-[28px] bg-[#f2f8e6] shadow-[0_14px_40px_rgba(15,23,42,0.05)]">
           <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
