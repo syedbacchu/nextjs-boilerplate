@@ -3,7 +3,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { submitCompanyDetails, CompanyDetailsData } from '../services/lead.service'
+import { submitCompanyDetails, CompanyDetailsData } from '@/features/lead'
+import TextInput from '@/components/form/TextInput'
+import SelectInput from '@/components/form/SelectInput'
+import RadioGroup from '@/components/form/RadioGroup'
 
 interface CompanyDetailsFormProps {
     onSuccess?: () => void
@@ -24,6 +27,7 @@ export default function CompanyDetailsForm({ onSuccess, onCancel }: CompanyDetai
         peak_load_time: '',
         roof_size: '',
         roof_type: '',
+        roof_type_other: '',
         transformer_capacity: undefined,
         contract_demand: undefined,
         monthly_bill: undefined,
@@ -53,11 +57,10 @@ export default function CompanyDetailsForm({ onSuccess, onCancel }: CompanyDetai
         declaration_date: '',
     })
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value, type } = e.target
+    const handleInputChange = (name: string, value: any) => {
         setFormData(prev => ({
             ...prev,
-            [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : type === 'number' ? (value ? parseFloat(value) : undefined) : value,
+            [name]: value,
         }))
     }
 
@@ -125,8 +128,10 @@ export default function CompanyDetailsForm({ onSuccess, onCancel }: CompanyDetai
                 setTimeout(() => {
                     if (onSuccess) {
                         onSuccess()
+                    } else if (result.leadId) {
+                        router.push(`/leads/thank-you/${result.leadId}`)
                     } else {
-                        router.push('/thank-you')
+                        router.push('/leads/thank-you/success')
                     }
                 }, 1500)
             } else {
@@ -147,494 +152,99 @@ export default function CompanyDetailsForm({ onSuccess, onCancel }: CompanyDetai
                     <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Company Information</h3>
                 </div>
 
-                <div>
-                    <label htmlFor="company_name" className="block text-sm font-medium text-gray-700">
-                        Company Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="company_name"
-                        name="company_name"
-                        required
-                        value={formData.company_name}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Company Name"
+                    name="company_name"
+                    value={formData.company_name}
+                    onChange={(value) => handleInputChange('company_name', value)}
+                    required
+                />
 
-                <div>
-                    <label htmlFor="full_name" className="block text-sm font-medium text-gray-700">
-                        Contact Person Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="full_name"
-                        name="full_name"
-                        required
-                        value={formData.full_name}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Contact Person Name"
+                    name="full_name"
+                    value={formData.full_name}
+                    onChange={(value) => handleInputChange('full_name', value)}
+                    required
+                />
 
-                <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                        Phone <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        required
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
+                <TextInput
+                    label="Phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(value) => handleInputChange('phone', value)}
+                    required
+                />
+                <TextInput
+                    label="Factory Location(google map)"
+                    name="google_map"
+                    type="url"
+                    value={formData.google_map}
+                    onChange={(value) => handleInputChange('google_map', value)}
+                />
                 <div className="md:col-span-2">
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                        Address <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                        id="address"
+                    <TextInput
+                        label="Factory Address"
                         name="address"
-                        required
-                        rows={2}
                         value={formData.address}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                        onChange={(value) => handleInputChange('address', value)}
+                        textarea
+                        required
                     />
                 </div>
 
-                <div>
-                    <label htmlFor="grid_connection" className="block text-sm font-medium text-gray-700">
-                        Grid Connection <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="grid_connection"
-                        name="grid_connection"
-                        required
-                        value={formData.grid_connection}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Type</option>
-                        <option value="230v_single_phase">230V Single Phase</option>
-                        <option value="400v_three_phase">400V Three Phase</option>
-                        <option value="11kv">11KV</option>
-                        <option value="33kv">33KV</option>
-                    </select>
-                </div>
 
-                <div>
-                    <label htmlFor="working_shift" className="block text-sm font-medium text-gray-700">
-                        Working Shift <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="working_shift"
-                        name="working_shift"
-                        required
-                        value={formData.working_shift}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Shift</option>
-                        <option value="single_shift">Single Shift</option>
-                        <option value="double_shift">Double Shift</option>
-                        <option value="triple_shift">Triple Shift</option>
-                    </select>
-                </div>
 
-                <div>
-                    <label htmlFor="peak_load_time" className="block text-sm font-medium text-gray-700">
-                        Peak Load Time <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="peak_load_time"
-                        name="peak_load_time"
-                        required
-                        placeholder="e.g., 10 AM - 2 PM"
-                        value={formData.peak_load_time}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+
+
+
 
                 {/* Electrical Parameters */}
                 <div className="space-y-4 md:col-span-2">
                     <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Electrical Parameters</h3>
                 </div>
+                <SelectInput
+                    label="Grid Connection"
+                    value={formData.grid_connection}
+                    onChange={(value) => handleInputChange('grid_connection', value)}
+                    options={[
+                        { label: 'Single Phase', value: 'single_phase' },
+                        { label: 'Three Phase', value: 'three_phase' },
+                    ]}
+                    required
+                />
+                <TextInput
+                    label="Transformer Capacity (KVA)"
+                    name="transformer_capacity"
+                    type="number"
+                    value={formData.transformer_capacity?.toString() || ''}
+                    onChange={(value) => handleInputChange('transformer_capacity', value ? parseFloat(value) : undefined)}
+                />
 
-                <div>
-                    <label htmlFor="transformer_capacity" className="block text-sm font-medium text-gray-700">
-                        Transformer Capacity (KVA)
-                    </label>
-                    <input
-                        type="number"
-                        id="transformer_capacity"
-                        name="transformer_capacity"
-                        step="0.01"
-                        value={formData.transformer_capacity}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Contract Demand (kW)"
+                    name="contract_demand"
+                    type="number"
+                    value={formData.contract_demand?.toString() || ''}
+                    onChange={(value) => handleInputChange('contract_demand', value ? parseFloat(value) : undefined)}
+                />
 
-                <div>
-                    <label htmlFor="contract_demand" className="block text-sm font-medium text-gray-700">
-                        Contract Demand (kW)
-                    </label>
-                    <input
-                        type="number"
-                        id="contract_demand"
-                        name="contract_demand"
-                        step="0.01"
-                        value={formData.contract_demand}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Monthly Bill (BDT)"
+                    name="monthly_bill"
+                    type="number"
+                    value={formData.monthly_bill?.toString() || ''}
+                    onChange={(value) => handleInputChange('monthly_bill', value ? parseFloat(value) : undefined)}
+                />
 
-                <div>
-                    <label htmlFor="monthly_bill" className="block text-sm font-medium text-gray-700">
-                        Monthly Bill (BDT)
-                    </label>
-                    <input
-                        type="number"
-                        id="monthly_bill"
-                        name="monthly_bill"
-                        step="0.01"
-                        value={formData.monthly_bill}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="monthly_consumption" className="block text-sm font-medium text-gray-700">
-                        Monthly Consumption (kWh)
-                    </label>
-                    <input
-                        type="number"
-                        id="monthly_consumption"
-                        name="monthly_consumption"
-                        step="0.01"
-                        value={formData.monthly_consumption}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="total_connected_load" className="block text-sm font-medium text-gray-700">
-                        Total Connected Load (kW)
-                    </label>
-                    <input
-                        type="number"
-                        id="total_connected_load"
-                        name="total_connected_load"
-                        step="0.01"
-                        value={formData.total_connected_load}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="total_motor_load" className="block text-sm font-medium text-gray-700">
-                        Total Motor Load (kW)
-                    </label>
-                    <input
-                        type="number"
-                        id="total_motor_load"
-                        name="total_motor_load"
-                        step="0.01"
-                        value={formData.total_motor_load}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="daytime_load_percentage" className="block text-sm font-medium text-gray-700">
-                        Daytime Load Percentage (%)
-                    </label>
-                    <input
-                        type="number"
-                        id="daytime_load_percentage"
-                        name="daytime_load_percentage"
-                        min="0"
-                        max="100"
-                        step="0.01"
-                        value={formData.daytime_load_percentage}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="demand_factor" className="block text-sm font-medium text-gray-700">
-                        Demand Factor (0-1)
-                    </label>
-                    <input
-                        type="number"
-                        id="demand_factor"
-                        name="demand_factor"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        value={formData.demand_factor}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="diversity_factor" className="block text-sm font-medium text-gray-700">
-                        Diversity Factor (0-1)
-                    </label>
-                    <input
-                        type="number"
-                        id="diversity_factor"
-                        name="diversity_factor"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        value={formData.diversity_factor}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="maximum_demand" className="block text-sm font-medium text-gray-700">
-                        Maximum Demand (kW)
-                    </label>
-                    <input
-                        type="number"
-                        id="maximum_demand"
-                        name="maximum_demand"
-                        step="0.01"
-                        value={formData.maximum_demand}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="daily_consumption" className="block text-sm font-medium text-gray-700">
-                        Daily Consumption (kWh)
-                    </label>
-                    <input
-                        type="number"
-                        id="daily_consumption"
-                        name="daily_consumption"
-                        step="0.01"
-                        value={formData.daily_consumption}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                {/* System Requirements */}
-                <div className="space-y-4 md:col-span-2">
-                    <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">System Requirements</h3>
-                </div>
-
-                <div>
-                    <label htmlFor="solar_target_percent" className="block text-sm font-medium text-gray-700">
-                        Solar Target Percentage (%)
-                    </label>
-                    <input
-                        type="number"
-                        id="solar_target_percent"
-                        name="solar_target_percent"
-                        min="0"
-                        max="100"
-                        step="0.01"
-                        value={formData.solar_target_percent}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="required_capacity_kw" className="block text-sm font-medium text-gray-700">
-                        Required Capacity (kW)
-                    </label>
-                    <input
-                        type="number"
-                        id="required_capacity_kw"
-                        name="required_capacity_kw"
-                        step="0.01"
-                        value={formData.required_capacity_kw}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="system_size_kw" className="block text-sm font-medium text-gray-700">
-                        System Size (kW)
-                    </label>
-                    <input
-                        type="number"
-                        id="system_size_kw"
-                        name="system_size_kw"
-                        step="0.01"
-                        value={formData.system_size_kw}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="backup_hours" className="block text-sm font-medium text-gray-700">
-                        Backup Hours
-                    </label>
-                    <input
-                        type="number"
-                        id="backup_hours"
-                        name="backup_hours"
-                        min="0"
-                        value={formData.backup_hours}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="critical_load" className="block text-sm font-medium text-gray-700">
-                        Critical Load (kW)
-                    </label>
-                    <input
-                        type="number"
-                        id="critical_load"
-                        name="critical_load"
-                        step="0.01"
-                        value={formData.critical_load}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="inverter_size" className="block text-sm font-medium text-gray-700">
-                        Inverter Size (kW)
-                    </label>
-                    <input
-                        type="number"
-                        id="inverter_size"
-                        name="inverter_size"
-                        step="0.01"
-                        value={formData.inverter_size}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="panel_size" className="block text-sm font-medium text-gray-700">
-                        Panel Size (Wp)
-                    </label>
-                    <input
-                        type="number"
-                        id="panel_size"
-                        name="panel_size"
-                        step="0.01"
-                        value={formData.panel_size}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="panel_quantity" className="block text-sm font-medium text-gray-700">
-                        Panel Quantity
-                    </label>
-                    <input
-                        type="number"
-                        id="panel_quantity"
-                        name="panel_quantity"
-                        min="0"
-                        value={formData.panel_quantity}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                {/* Roof Details */}
-                <div className="space-y-4 md:col-span-2">
-                    <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Roof Details</h3>
-                </div>
-
-                <div>
-                    <label htmlFor="roof_size" className="block text-sm font-medium text-gray-700">
-                        Roof Size <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="roof_size"
-                        name="roof_size"
-                        required
-                        value={formData.roof_size}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Size</option>
-                        <option value="small">Small (&lt;5000 sqft)</option>
-                        <option value="medium">Medium (5000-15000 sqft)</option>
-                        <option value="large">Large (&gt;15000 sqft)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label htmlFor="roof_type" className="block text-sm font-medium text-gray-700">
-                        Roof Type <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="roof_type"
-                        name="roof_type"
-                        required
-                        value={formData.roof_type}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Type</option>
-                        <option value="flat_concrete">Flat Concrete</option>
-                        <option value="metal_sheet">Metal Sheet</option>
-                        <option value="truss">Truss / GI Shed</option>
-                    </select>
-                </div>
-
-                <div className="flex items-center gap-2">
-                    <input
-                        type="checkbox"
-                        id="has_shadow"
-                        name="has_shadow"
-                        checked={formData.has_shadow}
-                        onChange={handleInputChange}
-                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <label htmlFor="has_shadow" className="text-sm font-medium text-gray-700">
-                        Has Shadow
-                    </label>
-                </div>
-
-                <div>
-                    <label htmlFor="google_map" className="block text-sm font-medium text-gray-700">
-                        Google Map Link
-                    </label>
-                    <input
-                        type="url"
-                        id="google_map"
-                        name="google_map"
-                        value={formData.google_map}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Monthly Consumption (kWh)"
+                    name="monthly_consumption"
+                    type="number"
+                    value={formData.monthly_consumption?.toString() || ''}
+                    onChange={(value) => handleInputChange('monthly_consumption', value ? parseFloat(value) : undefined)}
+                />
 
                 {/* Machinery Load Details */}
                 <div className="space-y-4 md:col-span-2">
@@ -703,6 +313,15 @@ export default function CompanyDetailsForm({ onSuccess, onCancel }: CompanyDetai
                         </div>
                     ))}
                 </div>
+
+                <TextInput
+                    label="Total Connected Load (kW)"
+                    name="total_connected_load"
+                    type="number"
+                    value={formData.total_connected_load?.toString() || ''}
+                    onChange={(value) => handleInputChange('total_connected_load', value ? parseFloat(value) : undefined)}
+                />
+
 
                 {/* Motor Load Details */}
                 <div className="space-y-4 md:col-span-2">
@@ -780,73 +399,242 @@ export default function CompanyDetailsForm({ onSuccess, onCancel }: CompanyDetai
                     ))}
                 </div>
 
+
+
+                <TextInput
+                    label="Total Motor Load (kW)"
+                    name="total_motor_load"
+                    type="number"
+                    value={formData.total_motor_load?.toString() || ''}
+                    onChange={(value) => handleInputChange('total_motor_load', value ? parseFloat(value) : undefined)}
+                />
+
+                <div className="space-y-4 md:col-span-2">
+                    <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Operating Pattern</h3>
+                </div>
+                <SelectInput
+                    label="Working Shift"
+                    value={formData.working_shift}
+                    onChange={(value) => handleInputChange('working_shift', value)}
+                    options={[
+                        { label: '8 Hours', value: '8_hours' },
+                        { label: '12 Hours', value: '12_hours' },
+                        { label: '24 Hours', value: '24_hours' },
+                    ]}
+                    required
+                />
+
+                <TextInput
+                    label="Peak Load Time"
+                    name="peak_load_time"
+                    value={formData.peak_load_time}
+                    onChange={(value) => handleInputChange('peak_load_time', value)}
+                    placeholder="e.g., 10 AM - 2 PM"
+                    required
+                />
+
+                <TextInput
+                    label="Daytime Load Percentage (%)"
+                    name="daytime_load_percentage"
+                    type="number"
+                    value={formData.daytime_load_percentage?.toString() || ''}
+                    onChange={(value) => handleInputChange('daytime_load_percentage', value ? parseFloat(value) : undefined)}
+                />
+
+                <TextInput
+                    label="Demand Factor (0-1)"
+                    name="demand_factor"
+                    type="number"
+                    step="0.01"
+                    value={formData.demand_factor?.toString() || ''}
+                    onChange={(value) => handleInputChange('demand_factor', value ? parseFloat(value) : undefined)}
+                />
+
+                <TextInput
+                    label="Diversity Factor (0-1)"
+                    name="diversity_factor"
+                    type="number"
+                    step="0.01"
+                    value={formData.diversity_factor?.toString() || ''}
+                    onChange={(value) => handleInputChange('diversity_factor', value ? parseFloat(value) : undefined)}
+                />
+
+                <TextInput
+                    label="Maximum Demand (kW)"
+                    name="maximum_demand"
+                    type="number"
+                    value={formData.maximum_demand?.toString() || ''}
+                    onChange={(value) => handleInputChange('maximum_demand', value ? parseFloat(value) : undefined)}
+                />
+
+                <TextInput
+                    label="Daily Consumption (kWh)"
+                    name="daily_consumption"
+                    type="number"
+                    value={formData.daily_consumption?.toString() || ''}
+                    onChange={(value) => handleInputChange('daily_consumption', value ? parseFloat(value) : undefined)}
+                />
+
+                {/* System Requirements */}
+                <div className="space-y-4 md:col-span-2">
+                    <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">System Requirements</h3>
+                </div>
+
+                <TextInput
+                    label="Solar Target Percentage (%)"
+                    name="solar_target_percent"
+                    type="number"
+                    value={formData.solar_target_percent?.toString() || ''}
+                    onChange={(value) => handleInputChange('solar_target_percent', value ? parseFloat(value) : undefined)}
+                />
+
+                <TextInput
+                    label="Required Capacity (kW)"
+                    name="required_capacity_kw"
+                    type="number"
+                    value={formData.required_capacity_kw?.toString() || ''}
+                    onChange={(value) => handleInputChange('required_capacity_kw', value ? parseFloat(value) : undefined)}
+                />
+
+                <TextInput
+                    label="System Size (kW)"
+                    name="system_size_kw"
+                    type="number"
+                    value={formData.system_size_kw?.toString() || ''}
+                    onChange={(value) => handleInputChange('system_size_kw', value ? parseFloat(value) : undefined)}
+                />
+
+                <TextInput
+                    label="Backup Hours"
+                    name="backup_hours"
+                    type="number"
+                    value={formData.backup_hours?.toString() || ''}
+                    onChange={(value) => handleInputChange('backup_hours', value ? parseFloat(value) : undefined)}
+                />
+
+                <TextInput
+                    label="Critical Load (kW)"
+                    name="critical_load"
+                    type="number"
+                    value={formData.critical_load?.toString() || ''}
+                    onChange={(value) => handleInputChange('critical_load', value ? parseFloat(value) : undefined)}
+                />
+
+                <TextInput
+                    label="Inverter Size (kW)"
+                    name="inverter_size"
+                    type="number"
+                    value={formData.inverter_size?.toString() || ''}
+                    onChange={(value) => handleInputChange('inverter_size', value ? parseFloat(value) : undefined)}
+                />
+
+                <TextInput
+                    label="Panel Size (Wp)"
+                    name="panel_size"
+                    type="number"
+                    value={formData.panel_size?.toString() || ''}
+                    onChange={(value) => handleInputChange('panel_size', value ? parseFloat(value) : undefined)}
+                />
+
+                <TextInput
+                    label="Panel Quantity"
+                    name="panel_quantity"
+                    type="number"
+                    value={formData.panel_quantity?.toString() || ''}
+                    onChange={(value) => handleInputChange('panel_quantity', value ? parseFloat(value) : undefined)}
+                />
+
+                {/* Roof Details */}
+                <div className="space-y-4 md:col-span-2">
+                    <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Roof Details</h3>
+                </div>
+
+                <TextInput
+                    label="Roof Size (approx sq. ft)"
+                    name="roof_size"
+                    type="number"
+                    value={formData.roof_size}
+                    onChange={(value) => handleInputChange('roof_size', value)}
+                    required
+                    placeholder="Enter roof size in sq. ft"
+                />
+
+                <SelectInput
+                    label="Roof Type"
+                    value={formData.roof_type}
+                    onChange={(value) => handleInputChange('roof_type', value)}
+                    options={[
+                        { label: 'Concrete', value: 'concrete' },
+                        { label: 'Tin Shade', value: 'tin_shade' },
+                        { label: 'Other', value: 'other' },
+                    ]}
+                    required
+                />
+                {formData.roof_type === 'other' && (
+                    <TextInput
+                        label="Please specify"
+                        name="roof_type_other"
+                        value={formData.roof_type_other}
+                        onChange={(value) => handleInputChange('roof_type_other', value)}
+                        required
+                        placeholder="Enter roof type"
+                    />
+                )}
+
+                <RadioGroup
+                    label="Shadow Issue"
+                    value={formData.has_shadow ? 'yes' : 'no'}
+                    onChange={(value) => handleInputChange('has_shadow', value === 'yes')}
+                    options={[
+                        { label: 'Yes', value: 'yes' },
+                        { label: 'No', value: 'no' },
+                    ]}
+                />
+
+
+
+
                 {/* Cost Analysis */}
                 <div className="space-y-4 md:col-span-2">
                     <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Cost Analysis</h3>
                 </div>
 
-                <div>
-                    <label htmlFor="estimated_project_cost" className="block text-sm font-medium text-gray-700">
-                        Estimated Project Cost (BDT)
-                    </label>
-                    <input
-                        type="number"
-                        id="estimated_project_cost"
-                        name="estimated_project_cost"
-                        step="0.01"
-                        value={formData.estimated_project_cost}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Estimated Project Cost (BDT)"
+                    name="estimated_project_cost"
+                    type="number"
+                    value={formData.estimated_project_cost?.toString() || ''}
+                    onChange={(value) => handleInputChange('estimated_project_cost', value ? parseFloat(value) : undefined)}
+                />
 
-                <div>
-                    <label htmlFor="expected_payback_period" className="block text-sm font-medium text-gray-700">
-                        Expected Payback Period (Years)
-                    </label>
-                    <input
-                        type="number"
-                        id="expected_payback_period"
-                        name="expected_payback_period"
-                        step="0.01"
-                        value={formData.expected_payback_period}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Expected Payback Period (Years)"
+                    name="expected_payback_period"
+                    type="number"
+                    step="0.01"
+                    value={formData.expected_payback_period?.toString() || ''}
+                    onChange={(value) => handleInputChange('expected_payback_period', value ? parseFloat(value) : undefined)}
+                />
 
                 {/* Declaration */}
                 <div className="space-y-4 md:col-span-2">
                     <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Declaration</h3>
                 </div>
 
-                <div>
-                    <label htmlFor="customer_signature" className="block text-sm font-medium text-gray-700">
-                        Customer Signature
-                    </label>
-                    <input
-                        type="text"
-                        id="customer_signature"
-                        name="customer_signature"
-                        value={formData.customer_signature}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Customer Signature"
+                    name="customer_signature"
+                    value={formData.customer_signature}
+                    onChange={(value) => handleInputChange('customer_signature', value)}
+                />
 
-                <div>
-                    <label htmlFor="declaration_date" className="block text-sm font-medium text-gray-700">
-                        Declaration Date
-                    </label>
-                    <input
-                        type="date"
-                        id="declaration_date"
-                        name="declaration_date"
-                        value={formData.declaration_date}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Declaration Date"
+                    name="declaration_date"
+                    type="date"
+                    value={formData.declaration_date}
+                    onChange={(value) => handleInputChange('declaration_date', value)}
+                />
             </div>
 
             {/* Form Actions */}

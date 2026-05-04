@@ -33,7 +33,7 @@ export async function submitCustomerLead(data: CustomerLeadData): Promise<Submit
     }
 }
 
-export async function submitCompanyDetails(data: CompanyDetailsData): Promise<{ success: boolean; message?: string; error?: string }> {
+export async function submitCompanyDetails(data: CompanyDetailsData): Promise<SubmitLeadResponse> {
     try {
         const response = await fetch(`${API_BASE_URL}/collect-leads/company-details`, {
             method: 'POST',
@@ -44,12 +44,20 @@ export async function submitCompanyDetails(data: CompanyDetailsData): Promise<{ 
         })
 
         const result = await response.json()
+        console.log('Submit Company Details API Response:', result)
 
         if (!response.ok) {
             return { success: false, error: result.message || 'Failed to submit company details' }
         }
 
-        return { success: true, message: result.message || 'Company details submitted successfully' }
+        const leadId = result.data?.id || result.id
+        console.log('Extracted Lead ID:', leadId)
+
+        return {
+            success: true,
+            message: result.message || 'Company details submitted successfully',
+            leadId: leadId
+        }
     } catch (error) {
         console.error('Error submitting company details:', error)
         return { success: false, error: 'Network error. Please try again.' }

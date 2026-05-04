@@ -20,7 +20,7 @@ export default function ThankYouSuccessPage() {
                 </p>
                 <div className="flex flex-col gap-3">
                     <Link
-                        href="/"
+                        href="/public"
                         className="rounded-md bg-blue-600 px-6 py-3 text font-medium text-white transition-colors hover:bg-blue-700"
                     >
                         Back to Home

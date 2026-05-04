@@ -43,6 +43,7 @@ export interface CompanyDetailsData {
     peak_load_time: string
     roof_size: string
     roof_type: string
+    roof_type_other?: string
     transformer_capacity?: number
     contract_demand?: number
     monthly_bill?: number
@@ -97,18 +98,19 @@ export interface LeadDetailData {
     google_map?: string
     roof_size: string
     roof_type: string
+    roof_type_other?: string
     has_shadow: boolean
-    lead_source: string
-    decision_maker: string
-    decision_time: string
+    lead_source?: string
+    decision_maker?: string
+    decision_time?: string
     customer_signature?: string
     declaration_date?: string
     status: string
     created_at: string
     updated_at: string
     nid?: string
-    customer_type: string
-    district: string
+    customer_type?: string
+    district?: string
     installation_site_type?: string
     installation_site_type_other?: string
     electricity_source?: string
@@ -122,8 +124,46 @@ export interface LeadDetailData {
     budget_range?: string
     payment_preference?: string
     installation_area?: string
-    roof_type_other?: string
     lead_source_other?: string
+
+    // Company specific fields
+    company_name?: string
+    grid_connection?: string
+    working_shift?: string
+    peak_load_time?: string
+    transformer_capacity?: string
+    contract_demand?: string
+    monthly_consumption?: string
+    total_connected_load?: string
+    total_motor_load?: string
+    daytime_load_percentage?: string
+    demand_factor?: string
+    diversity_factor?: string
+    maximum_demand?: string
+    daily_consumption?: string
+    solar_target_percent?: string
+    required_capacity_kw?: string
+    backup_hours?: string
+    critical_load?: string
+    inverter_size?: string
+    panel_size?: string
+    panel_quantity?: string
+    estimated_project_cost?: string
+    expected_payback_period?: string
+    machinery_load_details?: Array<{
+        machine_name: string
+        qty: number
+        rated_power_kw: number
+        running_hours_per_day: number
+        total_kw: number
+    }>
+    motor_load_details?: Array<{
+        motor_type: string
+        qty: number
+        hp: number
+        kw: number
+        starting_type: string
+    }>
 }
 
 export interface SubmitLeadResponse {
