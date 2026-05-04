@@ -30,8 +30,8 @@ export const metadata: Metadata = {
   },
 
   title: {
-    default: "AppName",
-    template: "%s | AppName",
+    default: "Next Js",
+    template: "%s",
   },
 
   description:
@@ -53,17 +53,17 @@ export const metadata: Metadata = {
   creator: "Your Company",
 
   openGraph: {
-    title: "AppName",
+    title: "Next Js",
     description:
         "Launch your next web application faster with a powerful and scalable Next.js boilerplate.",
     url: "https://example.com",
-    siteName: "AppName",
+    siteName: "Next Js",
     images: [
       {
         url: "/og/default.png",
         width: 1200,
         height: 630,
-        alt: "AppName – Next.js Boilerplate",
+        alt: "Next Js – Next.js Boilerplate",
       },
     ],
     type: "website",
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "AppName",
+    title: "Next Js",
     description:
         "A clean and scalable Next.js boilerplate for modern web applications.",
     images: ["/og/default.png"],
