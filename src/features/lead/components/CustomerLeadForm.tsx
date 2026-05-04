@@ -3,7 +3,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { submitCustomerLead, CustomerLeadData } from '../services/lead.service'
+import { submitCustomerLead, CustomerLeadData } from '@/features/lead'
+import TextInput from '@/components/form/TextInput'
+import SelectInput from '@/components/form/SelectInput'
+import RadioGroup from '@/components/form/RadioGroup'
 
 interface CustomerLeadFormProps {
     onSuccess?: () => void
@@ -21,17 +24,21 @@ export default function CustomerLeadForm({ onSuccess, onCancel }: CustomerLeadFo
         address: '',
         district: '',
         installation_site_type: '',
+        installation_site_type_other: '',
         electricity_source: '',
         meter_type: '',
         daytime_usage: '',
         system_type: '',
         main_purpose: '',
+        main_purpose_other: '',
         budget_range: '',
         payment_preference: '',
         roof_size: '',
         roof_type: '',
+        roof_type_other: '',
         installation_area: '',
         lead_source: '',
+        lead_source_other: '',
         decision_maker: '',
         decision_time: '',
         whatsapp: '',
@@ -45,11 +52,10 @@ export default function CustomerLeadForm({ onSuccess, onCancel }: CustomerLeadFo
         declaration_date: '',
     })
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value, type } = e.target
+    const handleInputChange = (name: string, value: any) => {
         setFormData(prev => ({
             ...prev,
-            [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+            [name]: value,
         }))
     }
 
@@ -65,8 +71,10 @@ export default function CustomerLeadForm({ onSuccess, onCancel }: CustomerLeadFo
                 setTimeout(() => {
                     if (onSuccess) {
                         onSuccess()
+                    } else if (result.leadId) {
+                        router.push(`/leads/thank-you/${result.leadId}`)
                     } else {
-                        router.push('/thank-you')
+                        router.push('/leads/thank-you/success')
                     }
                 }, 1500)
             } else {
@@ -87,96 +95,58 @@ export default function CustomerLeadForm({ onSuccess, onCancel }: CustomerLeadFo
                     <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Personal Information</h3>
                 </div>
 
-                <div>
-                    <label htmlFor="full_name" className="block text-sm font-medium text-gray-700">
-                        Full Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="full_name"
-                        name="full_name"
-                        required
-                        value={formData.full_name}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Full Name"
+                    name="full_name"
+                    value={formData.full_name}
+                    onChange={(value) => handleInputChange('full_name', value)}
+                    required
+                />
 
-                <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                        Phone <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        required
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(value) => handleInputChange('phone', value)}
+                    required
+                />
 
-                <div>
-                    <label htmlFor="whatsapp" className="block text-sm font-medium text-gray-700">
-                        WhatsApp
-                    </label>
-                    <input
-                        type="tel"
-                        id="whatsapp"
-                        name="whatsapp"
-                        value={formData.whatsapp}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="WhatsApp"
+                    name="whatsapp"
+                    type="tel"
+                    value={formData.whatsapp}
+                    onChange={(value) => handleInputChange('whatsapp', value)}
+                />
 
-                <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                        Email
-                    </label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(value) => handleInputChange('email', value)}
+                />
 
-                <div>
-                    <label htmlFor="nid" className="block text-sm font-medium text-gray-700">
-                        NID
-                    </label>
-                    <input
-                        type="text"
-                        id="nid"
-                        name="nid"
-                        value={formData.nid}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="NID/Business ID"
+                    name="nid"
+                    value={formData.nid}
+                    onChange={(value) => handleInputChange('nid', value)}
+                />
 
-                <div>
-                    <label htmlFor="customer_type" className="block text-sm font-medium text-gray-700">
-                        Customer Type <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="customer_type"
-                        name="customer_type"
-                        required
-                        value={formData.customer_type}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Type</option>
-                        <option value="residential">Residential</option>
-                        <option value="commercial">Commercial</option>
-                        <option value="industrial">Industrial</option>
-                    </select>
-                </div>
+                <SelectInput
+                    label="Customer Type"
+                    value={formData.customer_type}
+                    onChange={(value) => handleInputChange('customer_type', value)}
+                    options={[
+                        { label: 'Residential (বাড়ি)', value: 'residential' },
+                        { label: 'Commercial (দোকান/অফিস)', value: 'commercial' },
+                        { label: 'Industrial (ফ্যাক্টরি)', value: 'industrial' },
+                        { label: 'Agricultural (কৃষি/সেচ)', value: 'agricultural' },
+                    ]}
+                    required
+                />
 
                 {/* Address Information */}
                 <div className="space-y-4 md:col-span-2">
@@ -184,419 +154,308 @@ export default function CustomerLeadForm({ onSuccess, onCancel }: CustomerLeadFo
                 </div>
 
                 <div className="md:col-span-2">
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                        Address <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                        id="address"
+                    <TextInput
+                        label="Address"
                         name="address"
-                        required
-                        rows={2}
                         value={formData.address}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="district" className="block text-sm font-medium text-gray-700">
-                        District <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="district"
-                        name="district"
+                        onChange={(value) => handleInputChange('address', value)}
+                        textarea
                         required
-                        value={formData.district}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                     />
                 </div>
 
-                <div>
-                    <label htmlFor="google_map" className="block text-sm font-medium text-gray-700">
-                        Google Map Link
-                    </label>
-                    <input
-                        type="url"
-                        id="google_map"
-                        name="google_map"
-                        value={formData.google_map}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="District"
+                    name="district"
+                    value={formData.district}
+                    onChange={(value) => handleInputChange('district', value)}
+                    required
+                />
+
+                <TextInput
+                    label="Google Map Link"
+                    name="google_map"
+                    type="url"
+                    value={formData.google_map}
+                    onChange={(value) => handleInputChange('google_map', value)}
+                />
 
                 {/* Installation Details */}
                 <div className="space-y-4 md:col-span-2">
                     <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Installation Details</h3>
                 </div>
 
-                <div>
-                    <label htmlFor="installation_site_type" className="block text-sm font-medium text-gray-700">
-                        Installation Site Type <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="installation_site_type"
-                        name="installation_site_type"
-                        required
-                        value={formData.installation_site_type}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Type</option>
-                        <option value="rooftop">Rooftop</option>
-                        <option value="ground_mount">Ground Mount</option>
-                        <option value="carport">Carport</option>
-                    </select>
-                </div>
+                <SelectInput
+                    label="Installation Site Type"
+                    value={formData.installation_site_type}
+                    onChange={(value) => handleInputChange('installation_site_type', value)}
+                    options={[
+                        { label: 'Rooftop', value: 'rooftop' },
+                        { label: 'Ground', value: 'ground' },
+                        { label: 'Other', value: 'other' },
+                    ]}
+                    required
+                />
 
-                <div>
-                    <label htmlFor="electricity_source" className="block text-sm font-medium text-gray-700">
-                        Electricity Source <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="electricity_source"
-                        name="electricity_source"
+                {formData.installation_site_type === 'other' && (
+                    <TextInput
+                        label="Please specify"
+                        name="installation_site_type_other"
+                        value={formData.installation_site_type_other}
+                        onChange={(value) => handleInputChange('installation_site_type_other', value)}
                         required
-                        value={formData.electricity_source}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Source</option>
-                        <option value="grid">Grid</option>
-                        <option value="generator">Generator</option>
-                        <option value="solar">Solar</option>
-                        <option value="hybrid">Hybrid</option>
-                    </select>
-                </div>
+                        placeholder="Enter installation site type"
+                    />
+                )}
 
-                <div>
-                    <label htmlFor="meter_type" className="block text-sm font-medium text-gray-700">
-                        Meter Type <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="meter_type"
-                        name="meter_type"
-                        required
-                        value={formData.meter_type}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Type</option>
-                        <option value="single_phase">Single Phase</option>
-                        <option value="three_phase">Three Phase</option>
-                    </select>
-                </div>
+                <SelectInput
+                    label="Electricity Source"
+                    value={formData.electricity_source}
+                    onChange={(value) => handleInputChange('electricity_source', value)}
+                    options={[
+                        { label: 'Grid', value: 'grid' },
+                        { label: 'Generator', value: 'generator' },
+                        { label: 'Solar', value: 'solar' },
+                    ]}
+                    required
+                />
 
-                <div>
-                    <label htmlFor="daytime_usage" className="block text-sm font-medium text-gray-700">
-                        Daytime Usage <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="daytime_usage"
-                        name="daytime_usage"
-                        required
-                        value={formData.daytime_usage}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Usage</option>
-                        <option value="low">Low (0-30%)</option>
-                        <option value="medium">Medium (30-60%)</option>
-                        <option value="high">High (60-100%)</option>
-                    </select>
-                </div>
+                <SelectInput
+                    label="Meter Type"
+                    value={formData.meter_type}
+                    onChange={(value) => handleInputChange('meter_type', value)}
+                    options={[
+                        { label: 'Single Phase', value: 'single_phase' },
+                        { label: 'Three Phase', value: 'three_phase' },
+                    ]}
+                    required
+                />
+
+                <SelectInput
+                    label="Daytime Usage"
+                    value={formData.daytime_usage}
+                    onChange={(value) => handleInputChange('daytime_usage', value)}
+                    options={[
+                        { label: 'Low (0-30%)', value: 'low' },
+                        { label: 'Medium (30-60%)', value: 'medium' },
+                        { label: 'High (60-100%)', value: 'high' },
+                    ]}
+                    required
+                />
 
                 {/* System Details */}
                 <div className="space-y-4 md:col-span-2">
                     <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">System Details</h3>
                 </div>
 
-                <div>
-                    <label htmlFor="system_type" className="block text-sm font-medium text-gray-700">
-                        System Type <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="system_type"
-                        name="system_type"
+                <SelectInput
+                    label="System Type"
+                    value={formData.system_type}
+                    onChange={(value) => handleInputChange('system_type', value)}
+                    options={[
+                        { label: 'On-Grid', value: 'on_grid' },
+                        { label: 'Off-Grid', value: 'off_grid' },
+                        { label: 'Hybrid', value: 'hybrid' },
+                    ]}
+                    required
+                />
+
+                <TextInput
+                    label="System Size (kW)"
+                    name="system_size_kw"
+                    type="number"
+                    value={formData.system_size_kw?.toString() || ''}
+                    onChange={(value) => handleInputChange('system_size_kw', value ? parseFloat(value) : undefined)}
+                />
+
+                <SelectInput
+                    label="Main Purpose"
+                    value={formData.main_purpose}
+                    onChange={(value) => handleInputChange('main_purpose', value)}
+                    options={[
+                        { label: 'Reduce Electricity Bill', value: 'Reduce_Electricity_Bill' },
+                        { label: 'Backup Power', value: 'Backup_Power' },
+                        { label: 'Business Investment', value: 'Business_Investment' },
+                        { label: 'Other', value: 'other' },
+                    ]}
+                    required
+                />
+
+                {formData.main_purpose === 'other' && (
+                    <TextInput
+                        label="Please specify"
+                        name="main_purpose_other"
+                        value={formData.main_purpose_other}
+                        onChange={(value) => handleInputChange('main_purpose_other', value)}
                         required
-                        value={formData.system_type}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Type</option>
-                        <option value="on_grid">On-Grid</option>
-                        <option value="off_grid">Off-Grid</option>
-                        <option value="hybrid">Hybrid</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label htmlFor="system_size_kw" className="block text-sm font-medium text-gray-700">
-                        System Size (kW)
-                    </label>
-                    <input
-                        type="number"
-                        id="system_size_kw"
-                        name="system_size_kw"
-                        step="0.01"
-                        value={formData.system_size_kw}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                        placeholder="Enter main purpose"
                     />
-                </div>
+                )}
 
-                <div>
-                    <label htmlFor="main_purpose" className="block text-sm font-medium text-gray-700">
-                        Main Purpose <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="main_purpose"
-                        name="main_purpose"
-                        required
-                        value={formData.main_purpose}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Purpose</option>
-                        <option value="bill_reduction">Bill Reduction</option>
-                        <option value="backup">Backup Power</option>
-                        <option value="environmental">Environmental</option>
-                        <option value="independence">Energy Independence</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label htmlFor="monthly_bill" className="block text-sm font-medium text-gray-700">
-                        Monthly Bill (BDT)
-                    </label>
-                    <input
-                        type="number"
-                        id="monthly_bill"
-                        name="monthly_bill"
-                        step="0.01"
-                        value={formData.monthly_bill}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Monthly Bill (BDT)"
+                    name="monthly_bill"
+                    type="number"
+                    value={formData.monthly_bill?.toString() || ''}
+                    onChange={(value) => handleInputChange('monthly_bill', value ? parseFloat(value) : undefined)}
+                />
 
                 {/* Roof Details */}
                 <div className="space-y-4 md:col-span-2">
                     <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Roof Details</h3>
                 </div>
 
-                <div>
-                    <label htmlFor="roof_size" className="block text-sm font-medium text-gray-700">
-                        Roof Size <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="roof_size"
-                        name="roof_size"
-                        required
-                        value={formData.roof_size}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Size</option>
-                        <option value="small">Small (&lt;1000 sqft)</option>
-                        <option value="medium">Medium (1000-3000 sqft)</option>
-                        <option value="large">Large (&gt;3000 sqft)</option>
-                    </select>
-                </div>
+                <TextInput
+                    label="Roof Size (approx sq. ft)"
+                    name="roof_size"
+                    type="number"
+                    value={formData.roof_size}
+                    onChange={(value) => handleInputChange('roof_size', value)}
+                    required
+                    placeholder="Enter roof size in sq. ft"
+                />
 
-                <div>
-                    <label htmlFor="roof_type" className="block text-sm font-medium text-gray-700">
-                        Roof Type <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="roof_type"
-                        name="roof_type"
-                        required
-                        value={formData.roof_type}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Type</option>
-                        <option value="flat">Flat</option>
-                        <option value="sloped">Sloped</option>
-                        <option value="metal">Metal Sheet</option>
-                        <option value="tile">Tile</option>
-                        <option value="concrete">Concrete</option>
-                    </select>
-                </div>
+                <SelectInput
+                    label="Roof Type"
+                    value={formData.roof_type}
+                    onChange={(value) => handleInputChange('roof_type', value)}
+                    options={[
+                        { label: 'Concrete', value: 'concrete' },
+                        { label: 'Tin Shade', value: 'tin_shade' },
+                        { label: 'Other', value: 'other' },
+                    ]}
+                    required
+                />
 
-                <div>
-                    <label htmlFor="installation_area" className="block text-sm font-medium text-gray-700">
-                        Installation Area <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="installation_area"
-                        name="installation_area"
+                {formData.roof_type === 'other' && (
+                    <TextInput
+                        label="Please specify"
+                        name="roof_type_other"
+                        value={formData.roof_type_other}
+                        onChange={(value) => handleInputChange('roof_type_other', value)}
                         required
-                        value={formData.installation_area}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                        placeholder="Enter roof type"
                     />
-                </div>
+                )}
 
-                <div className="flex items-center gap-2">
-                    <input
-                        type="checkbox"
-                        id="has_shadow"
-                        name="has_shadow"
-                        checked={formData.has_shadow}
-                        onChange={handleInputChange}
-                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <label htmlFor="has_shadow" className="text-sm font-medium text-gray-700">
-                        Has Shadow
-                    </label>
-                </div>
+                <TextInput
+                    label="Installation Area"
+                    name="installation_area"
+                    value={formData.installation_area}
+                    onChange={(value) => handleInputChange('installation_area', value)}
+                    required
+                />
+
+                <RadioGroup
+                    label="Shadow Issue"
+                    value={formData.has_shadow ? 'yes' : 'no'}
+                    onChange={(value) => handleInputChange('has_shadow', value === 'yes')}
+                    options={[
+                        { label: 'Yes', value: 'yes' },
+                        { label: 'No', value: 'no' },
+                    ]}
+                />
 
                 {/* Budget & Decision */}
                 <div className="space-y-4 md:col-span-2">
                     <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Budget & Decision</h3>
                 </div>
 
-                <div>
-                    <label htmlFor="budget_range" className="block text-sm font-medium text-gray-700">
-                        Budget Range <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="budget_range"
-                        name="budget_range"
-                        required
-                        value={formData.budget_range}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Range</option>
-                        <option value="1_3_lakh">1-3 Lakh</option>
-                        <option value="3_5_lakh">3-5 Lakh</option>
-                        <option value="5_10_lakh">5-10 Lakh</option>
-                        <option value="10_20_lakh">10-20 Lakh</option>
-                        <option value="20_plus_lakh">20+ Lakh</option>
-                    </select>
-                </div>
+                <SelectInput
+                    label="Budget Range"
+                    value={formData.budget_range}
+                    onChange={(value) => handleInputChange('budget_range', value)}
+                    options={[
+                        { label: '< 1 Lakh', value: 'above_1_lakh' },
+                        { label: '1-5 Lakh', value: '1_5_lakh' },
+                        { label: '5-20 Lakh', value: '5_20_lakh' },
+                        { label: '20+ Lakh', value: '20_plus_lakh' },
+                    ]}
+                    required
+                />
 
-                <div>
-                    <label htmlFor="payment_preference" className="block text-sm font-medium text-gray-700">
-                        Payment Preference <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="payment_preference"
-                        name="payment_preference"
-                        required
-                        value={formData.payment_preference}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Preference</option>
-                        <option value="full_payment">Full Payment</option>
-                        <option value="installment">Installment</option>
-                        <option value="lease">Lease</option>
-                        <option value="ppa">PPA</option>
-                    </select>
-                </div>
+                <SelectInput
+                    label="Payment Preference"
+                    value={formData.payment_preference}
+                    onChange={(value) => handleInputChange('payment_preference', value)}
+                    options={[
+                        { label: 'Cash', value: 'cash' },
+                        { label: 'EMI', value: 'EMI' },
+                        { label: 'Bank Loan', value: 'bank_loan' },
+                        { label: 'Lease Model', value: 'lease_model' },
+                    ]}
+                    required
+                />
 
-                <div>
-                    <label htmlFor="lead_source" className="block text-sm font-medium text-gray-700">
-                        Lead Source <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="lead_source"
-                        name="lead_source"
-                        required
-                        value={formData.lead_source}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Source</option>
-                        <option value="website">Website</option>
-                        <option value="facebook">Facebook</option>
-                        <option value="referral">Referral</option>
-                        <option value="advertisement">Advertisement</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
+                <SelectInput
+                    label="Lead Source"
+                    value={formData.lead_source}
+                    onChange={(value) => handleInputChange('lead_source', value)}
+                    options={[
+                        { label: 'Facebook', value: 'facebook' },
+                        { label: 'Google', value: 'google' },
+                        { label: 'YouTube', value: 'youtube' },
+                        { label: 'Referral', value: 'referral' },
+                        { label: 'Advertisement', value: 'advertisement' },
+                        { label: 'Other', value: 'other' },
+                    ]}
+                    required
+                />
 
-                <div>
-                    <label htmlFor="decision_maker" className="block text-sm font-medium text-gray-700">
-                        Decision Maker <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="decision_maker"
-                        name="decision_maker"
+                {formData.lead_source === 'other' && (
+                    <TextInput
+                        label="Please specify"
+                        name="lead_source_other"
+                        value={formData.lead_source_other}
+                        onChange={(value) => handleInputChange('lead_source_other', value)}
                         required
-                        value={formData.decision_maker}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select</option>
-                        <option value="self">Self</option>
-                        <option value="spouse">Spouse</option>
-                        <option value="parent">Parent</option>
-                        <option value="business_partner">Business Partner</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
+                        placeholder="Enter lead source"
+                    />
+                )}
 
-                <div>
-                    <label htmlFor="decision_time" className="block text-sm font-medium text-gray-700">
-                        Decision Time <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        id="decision_time"
-                        name="decision_time"
-                        required
-                        value={formData.decision_time}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    >
-                        <option value="">Select Timeframe</option>
-                        <option value="immediate">Immediate</option>
-                        <option value="1_month">Within 1 Month</option>
-                        <option value="3_months">Within 3 Months</option>
-                        <option value="6_months">Within 6 Months</option>
-                        <option value="just_exploring">Just Exploring</option>
-                    </select>
-                </div>
+                <SelectInput
+                    label="Decision Maker"
+                    value={formData.decision_maker}
+                    onChange={(value) => handleInputChange('decision_maker', value)}
+                    options={[
+                        { label: 'Self', value: 'self' },
+                        { label: 'Family', value: 'family' },
+                        { label: 'Company Management', value: 'Company Management' },
+                    ]}
+                    required
+                />
+
+                <SelectInput
+                    label="Expected Decision Time"
+                    value={formData.decision_time}
+                    onChange={(value) => handleInputChange('decision_time', value)}
+                    options={[
+                        { label: 'Immediate', value: 'immediate' },
+                        { label: 'Within 1 Month', value: '1_month' },
+                        { label: '3 Months+', value: '3_months_plus' },
+                    ]}
+                    required
+                />
 
                 {/* Declaration */}
                 <div className="space-y-4 md:col-span-2">
                     <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Declaration</h3>
                 </div>
 
-                <div>
-                    <label htmlFor="customer_signature" className="block text-sm font-medium text-gray-700">
-                        Customer Signature
-                    </label>
-                    <input
-                        type="text"
-                        id="customer_signature"
-                        name="customer_signature"
-                        value={formData.customer_signature}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Customer Signature"
+                    name="customer_signature"
+                    value={formData.customer_signature}
+                    onChange={(value) => handleInputChange('customer_signature', value)}
+                />
 
-                <div>
-                    <label htmlFor="declaration_date" className="block text-sm font-medium text-gray-700">
-                        Declaration Date
-                    </label>
-                    <input
-                        type="date"
-                        id="declaration_date"
-                        name="declaration_date"
-                        value={formData.declaration_date}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                    />
-                </div>
+                <TextInput
+                    label="Declaration Date"
+                    name="declaration_date"
+                    type="date"
+                    value={formData.declaration_date}
+                    onChange={(value) => handleInputChange('declaration_date', value)}
+                />
             </div>
 
             {/* Form Actions */}

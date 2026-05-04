@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     description: 'Thank you for submitting the form',
 }
 
-export default function ThankYouPage() {
+export default function ThankYouSuccessPage() {
     return (
         <div className="flex min-h-[70vh] items-center justify-center bg-gray-50 px-4 py-12">
             <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-lg">
