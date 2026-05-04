@@ -40,79 +40,21 @@ export default async function Page() {
 
             {/* Services Section */}
             <BatteryServiceSection
-                sectionTitle="এটি Battery Life+ মাল্টিপ্লাস কেন বেছে নেবেন?"
-                sectionDescription="Why choose Battery Life+ Multiplus?"
-                features={[
-                    {
-                        title: "দীর্ঘ স্থায়ীত্ব",
-                        description: "দীর্ঘ সময় ধরে কাজ করে"
-                    },
-                    {
-                        title: "100% নিরাপদ ব্যবহার",
-                        description: "কোনো পার্শ্ব প্রতিক্রিয়া নেই"
-                    },
-                    {
-                        title: "উচ্চ ক্ষমতা",
-                        description: "সর্বোচ্চ পারফরম্যান্স নিশ্চিত করে"
-                    },
-                    {
-                        title: "পরিবেশবান্ধব",
-                        description: "পরিবেশের জন্য ক্ষতিকর নয়"
-                    }
-                ]}
-                benefits={[
-                    {
-                        icon: "battery",
-                        title: "দীর্ঘ স্থায়ীত্ব",
-                        subtitle: "Long Durability"
-                    },
-                    {
-                        icon: "sun",
-                        title: "উচ্চ ক্ষমতা",
-                        subtitle: "High Capacity"
-                    },
-                    {
-                        icon: "shield",
-                        title: "নিরাপদ ব্যবহার",
-                        subtitle: "Safe Use"
-                    },
-                    {
-                        icon: "recycle",
-                        title: "পরিবেশবান্ধব",
-                        subtitle: "Eco-Friendly"
-                    }
-                ]}
-                productImage="/image/battery-water-product.png"
+                sectionDescription="নিরাপদ, বিশুদ্ধ ও কার্যকর সমাধান যা ব্যাটারির দীর্ঘস্থায়ী পারফরম্যান্স নিশ্চিত করে"
             />
 
             {/* Savings/Benefits Section */}
             <BatterySavingsSection
-                sectionTitle="ব্যাটারির আয়ুষ্কাল বৃদ্ধি করুন"
-                sectionSubtitle="Extend Your Battery Life"
-                productImage="/image/battery-water-product.png"
+                sectionTitle="কখন ব্যবহার করবেন?"
+                sectionSubtitle="নিয়মিত ব্যাটারির পানি চেক করুন এবং প্রয়োজন অনুযায়ী Battery Life+ ব্যবহার করুন"
+                productImage="/image/service/batter-wtr.webp"
             />
 
             <BatteryTestimonialSection
-                testimonials={[
-                    {
-                        id: 1,
-                        quote: "VEXA City changed the way I travel. No fuel cost, low maintenance and very comfortable for my family.",
-                        name: "Alamin Hossain",
-                        location: "Dhaka",
-                    },
-                    {
-                        id: 2,
-                        quote: "I use VEXA Go for my daily office commute, and it is saving me a lot of money every month.",
-                        name: "Sadia Akter",
-                        location: "Gazipur",
-                    },
-                    {
-                        id: 3,
-                        quote: "Best decision! Smooth driving, easy charging and great after-sales support.",
-                        name: "Rashidul Islam",
-                        location: "Chattogram",
-                    },
-                ]}
+                sectionDescription="ব্যবহারবিধি অনুসরণ করুন এবং Battery Life+ দিয়ে ব্যাটারির দীর্ঘস্থায়ী সুরক্ষা নিশ্চিত করুন"
+                ctaTitle="আপনার ব্যাটারির দিন সেরা যাক"
+                ctaDescription="Battery Life+ ব্যাটারির পানি ব্যবহার করে ব্যাটারির আয়ু বাড়ান ও সর্বোচ্চ পারফরম্যান্স নিশ্চিত করুন"
+                productImage="/image/slider/battery-water-hero-reference.png"
             />
 
         </main>

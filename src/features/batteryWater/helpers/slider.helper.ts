@@ -3,21 +3,24 @@ import { SliderListItem } from '@/features/slider'
 
 export function transformSliderToHeroSlide(slider: SliderListItem): HeroSlide {
   const title = slider.title || 'Battery Life+'
-  const subtitle = slider.subtitle || 'ব্যাটারি জীবন সম্প্রসারণ'
-  const description = slider.description || 'প্যারামিটার অনুযায়ী সঠিক পানি'
+  const highlightText = slider.subtitle || 'ব্যাটারির পানি'
+  const subtitle = slider.description || 'প্যারামিটার অনুযায়ী সঠিক পানি'
 
-  // Transform features from stats or use defaults
-  const features = slider.stat?.slice(0, 4).map(stat => ({
-    icon: ['droplet', 'shield', 'zap', 'leaf'][Math.floor(Math.random() * 4)],
-    text: stat.title || stat.subtitle || 'Feature'
-  })) || [
-    { icon: 'droplet', text: '100% Pure Distilled Water' },
-    { icon: 'shield', text: 'Safe for Battery' },
-    { icon: 'zap', text: 'Improves Performance' },
-    { icon: 'leaf', text: 'Extends Battery Life' }
-  ]
+  const badgeSource = slider.stat?.slice(0, 4) || []
+  const trustBadges = badgeSource.length > 0
+    ? badgeSource.map((stat, index) => ({
+        icon: ['droplet', 'shield', 'zap', 'leaf'][index % 4],
+        heading: stat.title || 'Feature',
+        subHeading: stat.subtitle || 'Battery care',
+        image: stat.image || null,
+      }))
+    : [
+        { icon: 'droplet', heading: '100% Pure', subHeading: 'Distilled Water', image: null },
+        { icon: 'shield', heading: 'Safe for', subHeading: 'Battery', image: null },
+        { icon: 'zap', heading: 'Improves', subHeading: 'Performance', image: null },
+        { icon: 'leaf', heading: 'Extends', subHeading: 'Battery Life', image: null },
+      ]
 
-  // Transform CTA buttons
   const buttons = slider.cta_button?.slice(0, 2).map(btn => ({
     text: btn.label,
     href: btn.link || '/contact-us',
@@ -36,27 +39,30 @@ export function transformSliderToHeroSlide(slider: SliderListItem): HeroSlide {
   ]
 
   return {
-    image: slider.photo || '/image/slider/battery.webp',
+    image: slider.photo || '/image/slider/battery_slider.jpg',
+    mobileImage: slider.mobile_banner || undefined,
+    tagline: 'Premium Battery Water',
     title: title,
+    highlightText: highlightText,
     subtitle: subtitle,
-    description: description,
-    features: features,
-    buttons: buttons
+    buttons: buttons,
+    trustBadges: trustBadges
   }
 }
 
 export function getDefaultBatteryHeroSlides(): HeroSlide[] {
   return [
     {
-      image: "/image/slider/battery.webp",
+      image: "/image/slider/battery_slider.jpg",
+      tagline: "Premium Battery Water",
       title: "Battery Life+",
-      subtitle: "ব্যাটারি জীবন সম্প্রসারণ",
-      description: "প্যারামিটার অনুযায়ী সঠিক পানি",
-      features: [
-        { icon: 'droplet', text: '100% Pure Distilled Water' },
-        { icon: 'shield', text: 'Safe for Battery' },
-        { icon: 'zap', text: 'Improves Performance' },
-        { icon: 'leaf', text: 'Extends Battery Life' }
+      highlightText: "ব্যাটারির পানি",
+      subtitle: "আপনার ব্যাটারির সেরা সঙ্গী",
+      trustBadges: [
+        { icon: 'droplet', heading: '100% Pure', subHeading: 'Distilled Water' },
+        { icon: 'shield', heading: 'Safe for', subHeading: 'Battery' },
+        { icon: 'zap', heading: 'Improves', subHeading: 'Performance' },
+        { icon: 'leaf', heading: 'Extends', subHeading: 'Battery Life' }
       ],
       buttons: [
         {
@@ -72,15 +78,16 @@ export function getDefaultBatteryHeroSlides(): HeroSlide[] {
       ]
     },
     {
-      image: "/image/slider/battery.webp",
+      image: "/image/slider/battery_slider.jpg",
+      tagline: "Premium Battery Water",
       title: "Premium Quality",
-      subtitle: "সর্বোচ্চ মানের পানি",
-      description: "দীর্ঘস্থায়ী ব্যাটারি পারফরম্যান্স",
-      features: [
-        { icon: 'shield', text: 'ISO Certified' },
-        { icon: 'zap', text: 'Fast Charging Support' },
-        { icon: 'droplet', text: 'Zero Impurities' },
-        { icon: 'leaf', text: 'Eco-Friendly' }
+      highlightText: "সর্বোচ্চ মানের পানি",
+      subtitle: "দীর্ঘস্থায়ী ব্যাটারি পারফরম্যান্স",
+      trustBadges: [
+        { icon: 'shield', heading: 'ISO', subHeading: 'Certified' },
+        { icon: 'zap', heading: 'Fast Charging', subHeading: 'Support' },
+        { icon: 'leaf', heading: 'Eco', subHeading: 'Friendly' },
+        { icon: 'check', heading: 'Zero', subHeading: 'Impurities' }
       ],
       buttons: [
         {
@@ -96,15 +103,16 @@ export function getDefaultBatteryHeroSlides(): HeroSlide[] {
       ]
     },
     {
-      image: "/image/slider/battery.webp",
+      image: "/image/slider/battery_slider.jpg",
+      tagline: "Premium Battery Water",
       title: "Trusted Brand",
-      subtitle: "বিশ্বস্ত মানের",
-      description: "হাজার হাজার সন্তুষ্ট গ্রাহক",
-      features: [
-        { icon: 'check', text: 'Laboratory Tested' },
-        { icon: 'shield', text: 'Safe to Use' },
-        { icon: 'zap', text: 'Enhanced Efficiency' },
-        { icon: 'leaf', text: 'Long Battery Life' }
+      highlightText: "বিশ্বস্ত মানের",
+      subtitle: "হাজার হাজার সন্তুষ্ট গ্রাহক",
+      trustBadges: [
+        { icon: 'check', heading: 'Laboratory', subHeading: 'Tested' },
+        { icon: 'shield', heading: 'Safe to', subHeading: 'Use' },
+        { icon: 'leaf', heading: 'Long Battery', subHeading: 'Life' },
+        { icon: 'zap', heading: 'Enhanced', subHeading: 'Efficiency' }
       ],
       buttons: [
         {
