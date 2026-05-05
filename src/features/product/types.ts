@@ -85,6 +85,7 @@ export interface ProductListItem {
   is_featured: boolean
   status: boolean
   categories: ProductCategory[]
+  features: ProductFeature[]
   created_at: string
 }
 
