@@ -6,14 +6,15 @@ import { getProductDetailAction } from '@/features/product'
 import { ChevronRight, Check, ShoppingCart, Truck, Shield, RotateCcw } from 'lucide-react'
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   try {
-    const response = await getProductDetailAction(params.slug)
+    const { slug } = await params
+    const response = await getProductDetailAction(slug)
 
     if (!response.success || !response.data) {
       return constructMetadata({
@@ -41,7 +42,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const response = await getProductDetailAction(params.slug)
+  const { slug } = await params
+  const response = await getProductDetailAction(slug)
 
   if (!response.success || !response.data) {
     notFound()
@@ -61,7 +63,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto px-2 py-2">
         {/* Breadcrumb */}
         <nav className="mb-6 flex items-center gap-2 text-sm text-slate-600">
           <a href="/" className="hover:text-emerald-600 transition">Home</a>
@@ -74,7 +76,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-12">
           {/* Left Column - Gallery */}
           <div>
-            <ProductGallerySlider images={galleryImages} productName={product.name} />
+            <ProductGallerySlider
+              images={galleryImages}
+              productName={product.name}
+              videoLink={product.video_link}
+              videoImage={product.video_img}
+            />
           </div>
 
           {/* Right Column - Product Info */}
@@ -121,24 +128,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <p className="text-slate-700 leading-relaxed">
               {product.short_description}
             </p>
-
-            {/* Features */}
-            {product.features && product.features.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="font-semibold text-slate-900">Key Features:</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {product.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-sm">
-                      <Check className="h-4 w-4 text-emerald-600 flex-shrink-0" />
-                      <div>
-                        <span className="font-medium">{feature.title}:</span>{' '}
-                        <span className="text-slate-600">{feature.value}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Stock Status */}
             <div className="flex items-center gap-3">
@@ -243,7 +232,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-semibold text-slate-900">{variation.name}</span>
-                    {variation.attribute_value.value && (
+                    {variation.attribute_value?.value && (
                       <span
                         className="h-6 w-6 rounded-full border-2 border-slate-200"
                         style={{ backgroundColor: variation.attribute_value.value }}
@@ -288,6 +277,78 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Feature Groups */}
+        {product.features && product.features.length > 0 && (
+          <div className="space-y-12">
+            {product.features.map((featureGroup) => (
+              <div key={featureGroup.product_feature_id} className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+                {/* Feature Header */}
+                <div className="mb-8 text-center">
+                  {featureGroup.feature_image && (
+                    <div className="mb-6 flex justify-center">
+                      <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-emerald-100 shadow-lg">
+                        <img
+                          src={featureGroup.feature_image}
+                          alt={featureGroup.feature_title}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <h2 className="text-3xl font-bold text-slate-900 mb-2">{featureGroup.feature_title}</h2>
+                  {featureGroup.feature_sub_title && (
+                    <p className="text-lg text-slate-600 mb-4">{featureGroup.feature_sub_title}</p>
+                  )}
+                  {featureGroup.feature_description && (
+                    <p className="max-w-3xl mx-auto text-slate-700 leading-relaxed">
+                      {featureGroup.feature_description}
+                    </p>
+                  )}
+                </div>
+
+                {/* Feature Items Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {featureGroup.items
+                    .filter(item => item.status === 1)
+                    .sort((a, b) => a.sort_order - b.sort_order)
+                    .map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="group rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm transition-all hover:shadow-lg hover:border-emerald-200 hover:-translate-y-1"
+                    >
+                      {/* Item Image */}
+                      {item.image && (
+                        <div className="mb-4 flex justify-center">
+                          <div className="relative h-24 w-24 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+                            <img
+                              src={item.image}
+                              alt={item.title}
+                              className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Item Content */}
+                      <div className="text-center">
+                        <h3 className="text-lg font-bold text-slate-900 mb-2">{item.title}</h3>
+                        {item.sub_title && (
+                          <p className="text-sm font-semibold text-emerald-600 mb-3">{item.sub_title}</p>
+                        )}
+                        {item.description && (
+                          <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
+                            {item.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

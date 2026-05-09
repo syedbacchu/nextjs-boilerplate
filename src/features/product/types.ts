@@ -5,6 +5,26 @@ export interface ProductCategory {
   image?: string | null
 }
 
+export interface ProductFeatureItem {
+  image: string | null
+  title: string
+  status: number
+  sub_title: string
+  sort_order: number
+  description: string
+}
+
+export interface ProductFeatureGroup {
+  items: ProductFeatureItem[]
+  feature_slug: string
+  feature_image: string | null
+  feature_title: string
+  feature_sub_title: string
+  feature_sort_order: number
+  product_feature_id: number
+  feature_description: string
+}
+
 export interface ProductFeature {
   title: string
   value: string
@@ -58,7 +78,7 @@ export interface Product {
   is_featured: boolean
   status: boolean
   categories: ProductCategory[]
-  features: ProductFeature[]
+  features: ProductFeatureGroup[]
   quantity_discounts: ProductQuantityDiscount[]
   variations: ProductVariation[]
   attributes: any[]
@@ -85,7 +105,7 @@ export interface ProductListItem {
   is_featured: boolean
   status: boolean
   categories: ProductCategory[]
-  features: ProductFeature[]
+  features: ProductFeatureItem[]
   created_at: string
 }
 
