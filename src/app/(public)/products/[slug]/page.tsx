@@ -125,7 +125,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
 
             {/* Short Description */}
-            <p className="text-slate-700 leading-relaxed">
+            <p className="text-slate-700 leading-relaxed text-justify">
               {product.short_description}
             </p>
 
@@ -194,14 +194,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
 
         {/* Detailed Info Section */}
-        <div className="mt-12 grid gap-8 lg:grid-cols-2">
+        <div className="mt-12 space-y-8">
           {/* Description */}
           {product.description && (
             <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <h2 className="mb-4 text-2xl font-bold text-slate-900">Description</h2>
-              <div className="prose prose-slate max-w-none text-slate-700">
-                <p>{product.description}</p>
-              </div>
+              <div
+                className="prose prose-slate max-w-none text-slate-700 text-justify"
+                dangerouslySetInnerHTML={{ __html: product.description }}
+              />
             </div>
           )}
 
@@ -209,9 +210,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
           {product.usage_instructions && (
             <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <h2 className="mb-4 text-2xl font-bold text-slate-900">Usage Instructions</h2>
-              <div className="prose prose-slate max-w-none text-slate-700">
-                <p>{product.usage_instructions}</p>
-              </div>
+              <div
+                className="prose prose-slate max-w-none text-slate-700 text-justify"
+                dangerouslySetInnerHTML={{ __html: product.usage_instructions }}
+              />
             </div>
           )}
         </div>
@@ -220,7 +222,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         {product.variations && product.variations.length > 0 && (
           <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-2xl font-bold text-slate-900">Available Variations</h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {product.variations.map((variation) => (
                 <div
                   key={variation.id}
@@ -258,7 +260,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
         {/* Quantity Discounts */}
         {product.quantity_discounts && product.quantity_discounts.length > 0 && (
-          <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="mt-8 mb-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-2xl font-bold text-slate-900">Bulk Discounts</h2>
             <div className="space-y-3">
               {product.quantity_discounts.map((discount, idx) => (
@@ -282,7 +284,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
         {/* Feature Groups */}
         {product.features && product.features.length > 0 && (
-          <div className="space-y-12">
+          <div className="space-y-12 mt-4">
             {product.features.map((featureGroup) => (
               <div key={featureGroup.product_feature_id} className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
                 {/* Feature Header */}
@@ -303,9 +305,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     <p className="text-lg text-slate-600 mb-4">{featureGroup.feature_sub_title}</p>
                   )}
                   {featureGroup.feature_description && (
-                    <p className="max-w-3xl mx-auto text-slate-700 leading-relaxed">
-                      {featureGroup.feature_description}
-                    </p>
+                    <div
+                      className="max-w-3xl mx-auto text-slate-700 leading-relaxed prose prose-slate max-w-none"
+                      dangerouslySetInnerHTML={{ __html: featureGroup.feature_description }}
+                    />
                   )}
                 </div>
 
@@ -339,9 +342,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                           <p className="text-sm font-semibold text-emerald-600 mb-3">{item.sub_title}</p>
                         )}
                         {item.description && (
-                          <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
-                            {item.description}
-                          </p>
+                          <div
+                            className="text-sm text-slate-600 leading-relaxed line-clamp-3 prose prose-slate max-w-none"
+                            dangerouslySetInnerHTML={{ __html: item.description }}
+                          />
                         )}
                       </div>
                     </div>
