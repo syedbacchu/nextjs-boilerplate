@@ -41,70 +41,73 @@ export default function ProductCard({ item }: { item: ProductListItem }) {
   return (
     <Link
       href={`/products/${item.slug}`}
-      className="flex h-full flex-col border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,0.08)] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(15,23,42,0.12)]"
+      className="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
     >
-      <div className="p-5 sm:p-6">
-        {/* Image Section */}
-        <div className="relative mb-6 aspect-[16/10] w-full overflow-hidden bg-white">
-          {hasDiscount && (
-            <div className="absolute top-3 right-3 z-10 bg-red-500 text-white text-xs font-bold px-2.5 py-1.5 rounded-md shadow-sm">
-              {discountPercent}% OFF
-            </div>
+      {/* Image Section */}
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+        {hasDiscount && (
+          <div className="absolute top-2 right-2 z-10 rounded-full bg-red-500 px-2.5 py-1 text-xs font-bold text-white shadow-lg">
+            {discountPercent}% OFF
+          </div>
+        )}
+        {item.is_featured && (
+          <div className="absolute top-2 left-2 z-10 rounded-full bg-emerald-500 px-2.5 py-1 text-xs font-bold text-white shadow-lg">
+            Featured
+          </div>
+        )}
+        <Image
+          src={imageSrc}
+          alt={item.name}
+          fill
+          sizes="(min-width: 1024px) 33vw, 100vw"
+          quality={95}
+          unoptimized={unoptimized}
+          className="object-contain transition-transform duration-300 group-hover:scale-105"
+          priority={false}
+        />
+      </div>
+
+      {/* Content Section */}
+      <div className="flex flex-1 flex-col p-5">
+        {/* Title & Tagline */}
+        <div className="mb-3">
+          <h3 className="text-xl font-bold text-slate-900 line-clamp-1 group-hover:text-emerald-600 transition-colors">
+            {item.name}
+          </h3>
+          {item.tagline && (
+            <p className="mt-1 text-sm text-slate-500 line-clamp-1">
+              {item.tagline}
+            </p>
           )}
-          {item.is_featured && (
-            <div className="absolute top-3 left-3 z-10 bg-emerald-500 text-white text-xs font-bold px-2.5 py-1.5 rounded-md shadow-sm">
-              Featured
-            </div>
-          )}
-          <Image
-            src={imageSrc}
-            alt={item.name}
-            fill
-            sizes="(min-width: 1024px) 33vw, 100vw"
-            quality={95}
-            unoptimized={unoptimized}
-            className="object-contain"
-            priority={false}
-          />
         </div>
 
-        {/* Content Section */}
-        <h3 className="text-[2rem] font-extrabold leading-none tracking-tight text-slate-950">
-          {item.name}
-        </h3>
-
-        {item.tagline && (
-          <p className="mt-2 text-base text-slate-500 italic">
-            {item.tagline}
-          </p>
-        )}
-
+        {/* Description */}
         {shortDescription && (
-          <p className="mt-3 text-base text-slate-600 leading-relaxed line-clamp-3">
+          <p className="mb-4 text-sm text-slate-600 leading-relaxed line-clamp-2 flex-1 text-justify">
             {shortDescription}
           </p>
         )}
 
+        {/* Features */}
         {displayFeatures.length > 0 && (
-          <div className="mt-6 grid grid-cols-3 gap-3 border-t border-slate-200 pt-5">
+          <div className="mb-4 grid grid-cols-3 gap-2 border-t border-slate-100 pt-4">
             {displayFeatures.map((feature) => {
               const Icon = getFeatureIcon(feature.title)
               return (
-                <div key={feature.title} className="flex items-start gap-2.5">
-                  <Icon className="mt-0.5 h-5 w-5 text-[#7ed957]" aria-hidden="true" />
-                  <div>
-                    <p className="text-xs text-slate-400 capitalize">{feature.title}</p>
-                    <p className="text-sm font-semibold text-slate-900">{feature.sub_title}</p>
-                  </div>
+                <div key={feature.title} className="flex flex-col items-center text-center">
+                  <Icon className="mb-1 h-4 w-4 text-emerald-600" aria-hidden="true" />
+                  <p className="text-[10px] text-slate-500 capitalize leading-tight">{feature.title}</p>
+                  <p className="text-xs font-semibold text-slate-900 leading-tight">{feature.sub_title}</p>
                 </div>
               )
             })}
           </div>
         )}
 
-        <div className="mt-7 flex items-center justify-between gap-4 border-t border-slate-200 pt-5">
-          <div className="flex items-center gap-2">
-            <span className="text-3xl font-light tracking-tight text-[#66c747]">
+        {/* Price & CTA */}
+        <div className="flex items-center justify-between border-t border-slate-100 pt-4">
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-emerald-600">
               ৳{displayPrice.toLocaleString()}
             </span>
             {originalPrice && (
@@ -114,21 +117,22 @@ export default function ProductCard({ item }: { item: ProductListItem }) {
             )}
           </div>
 
-          <span className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.06em] text-[#66c747] transition-colors group-hover:text-[#55b039]">
-            View Details
+          <span className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-600 transition-colors">
+            View
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
             </svg>
           </span>
         </div>
 
+        {/* Stock Status */}
         {item.stock <= 10 && item.stock > 0 && (
-          <p className="mt-3 text-xs text-orange-600 font-semibold text-center">
-            Only {item.stock} left in stock!
+          <p className="mt-3 text-center text-xs font-semibold text-orange-600">
+            Only {item.stock} left!
           </p>
         )}
         {item.stock === 0 && (
-          <p className="mt-3 text-xs text-red-600 font-semibold text-center">
+          <p className="mt-3 text-center text-xs font-semibold text-red-600">
             Out of Stock
           </p>
         )}
