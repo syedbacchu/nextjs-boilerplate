@@ -1,3 +1,5 @@
+import {ApiResponse} from "@/types/api";
+
 export interface ContactFormData {
     name: string
     email: string
@@ -6,9 +8,13 @@ export interface ContactFormData {
     message: string
     recaptchaToken?: string
 }
-
-export interface ContactSubmitResponse {
-    success: boolean
-    message?: string
-    error?: string
+export interface ContactResData {
+    id: number
+    name: string
+    mobile: string
+    email: string
+    subject?: string | null
+    message?: string | null
 }
+
+export type ContactSubmitResponse = ApiResponse<ContactResData | unknown[]>

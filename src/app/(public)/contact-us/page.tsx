@@ -3,6 +3,7 @@ import { constructMetadata } from '@/lib/seo'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 import { getFAQAction } from '@/features/faq/actions/faq.actions'
 import ContactForm from '@/features/contact/components/ContactForm'
+import {FaMapMarkerAlt} from "react-icons/fa";
 
 export async function generateMetadata(): Promise<Metadata> {
     return constructMetadata({
@@ -13,6 +14,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactUsPage() {
+
+    const mapEmbedUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d73217.64248420105!2d90.28991004863279!3d23.837171899999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c14a5e0e9b03%3A0xa10956869d25a813!2sBio-Xin%20Cosmeceuticals%20-%20Mirpur%20DOHS!5e1!3m2!1sen!2sbd!4v1777200211713!5m2!1sen!2sbd'
+    const mapLinkUrl = 'https://maps.google.com/?q=Bio-Xin%20Cosmeceuticals%20-%20Mirpur%20DOHS'
     // Fetch FAQs from API
     let faqs = []
 
@@ -67,7 +71,7 @@ export default async function ContactUsPage() {
                             Get in Touch
                         </h1>
                         <p className="text-xl md:text-2xl text-blue-100 leading-relaxed">
-                            Have questions about solar energy? We're here to help. Reach out to us and let's start your solar journey today.
+                            {"Have questions about solar energy? We're here to help. Reach out to us and let's start your solar journey today."}
                         </p>
                     </div>
                 </div>
@@ -164,8 +168,26 @@ export default async function ContactUsPage() {
                 <div className="w-full h-full flex items-center justify-center bg-slate-300">
                     <div className="text-center">
                         <MapPin className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-                        <p className="text-slate-600 text-lg">Map integration would go here</p>
-                        <p className="text-slate-500 text-sm mt-2">Google Maps or other map service</p>
+                        <div className="relative aspect-[4/3] w-full min-h-[220px]">
+                            <iframe
+                                src={mapEmbedUrl}
+                                title="Bio-Xin Cosmeceuticals - Mirpur DOHS"
+                                className="absolute inset-0 h-full w-full border-0"
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                                allowFullScreen
+                            />
+                        </div>
+                        <a
+                            href={mapLinkUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white/80 transition-colors hover:text-white"
+                            aria-label="Open location in Google Maps"
+                        >
+                            <FaMapMarkerAlt className="shrink-0" />
+                            Open in Google Maps
+                        </a>
                     </div>
                 </div>
             </section>

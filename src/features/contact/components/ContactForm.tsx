@@ -1,7 +1,10 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { submitContactFormAction } from '../actions/contact.actions'
+import {createContactClient} from "@/features/contact";
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+
 
 interface ContactFormProps {
     onSuccess?: () => void
@@ -23,6 +26,7 @@ const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''
 const RECAPTCHA_ENABLED = process.env.NEXT_PUBLIC_RECAPTCHA_ENABLED === 'enabled'
 
 export default function ContactForm({ onSuccess }: ContactFormProps) {
+    const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submitStatus, setSubmitStatus] = useState<{
         type: 'success' | 'error' | null
@@ -106,34 +110,26 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
                 data.recaptchaToken = token
             }
 
-            const result = await submitContactFormAction(data)
-
+            const result = await createContactClient(data)
+            console.log('res', result);
             if (result.success) {
-                setSubmitStatus({
-                    type: 'success',
-                    message: result.message || 'Thank you for contacting us! We will get back to you soon.'
-                })
+                toast.success(result.message || 'Email send successfully')
+                router.refresh();
                 event.currentTarget.reset()
                 // Reset reCAPTCHA
                 if (recaptchaWidgetId && window.grecaptcha) {
                     window.grecaptcha.reset(recaptchaWidgetId)
                 }
-                onSuccess?.()
             } else {
-                setSubmitStatus({
-                    type: 'error',
-                    message: result.error || 'Failed to submit form. Please try again.'
-                })
-                // Reset reCAPTCHA on error
+                toast.error(result.message || 'Failed to send email')
                 if (recaptchaWidgetId && window.grecaptcha) {
                     window.grecaptcha.reset(recaptchaWidgetId)
                 }
             }
-        } catch (error) {
-            setSubmitStatus({
-                type: 'error',
-                message: 'An unexpected error occurred. Please try again.'
-            })
+
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'Server error'
+            toast.error(message)
             // Reset reCAPTCHA on error
             if (recaptchaWidgetId && window.grecaptcha) {
                 window.grecaptcha.reset(recaptchaWidgetId)
