@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import { constructMetadata } from '@/lib/seo'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
+import { getFAQAction } from '@/features/faq/actions/faq.actions'
+import ContactForm from '@/features/contact/components/ContactForm'
 
 export async function generateMetadata(): Promise<Metadata> {
     return constructMetadata({
@@ -10,7 +12,50 @@ export async function generateMetadata(): Promise<Metadata> {
     })
 }
 
-export default function ContactUsPage() {
+export default async function ContactUsPage() {
+    // Fetch FAQs from API
+    let faqs = []
+
+    try {
+        const response = await getFAQAction(1, 20)
+
+        if (response?.data && response.data.length > 0) {
+            faqs = response.data
+        }
+    } catch (error) {
+        console.error('Error fetching FAQs:', error)
+    }
+
+    // Default FAQs if API fails or returns no data
+    if (faqs.length === 0) {
+        faqs = [
+            {
+                id: 1,
+                question: "How much does a solar system cost?",
+                answer: "The cost varies depending on system size, your energy needs, and installation requirements. Contact us for a free site survey and customized quote.",
+                category: { name: "General" }
+            },
+            {
+                id: 2,
+                question: "How long does installation take?",
+                answer: "Most residential installations are completed within 1-3 days. Commercial projects may take 1-2 weeks depending on system size and complexity.",
+                category: { name: "General" }
+            },
+            {
+                id: 3,
+                question: "Do you offer warranties?",
+                answer: "Yes! We offer comprehensive warranties including 25-year performance warranty on panels and 5-10 year warranty on inverters and installation.",
+                category: { name: "General" }
+            },
+            {
+                id: 4,
+                question: "Do you provide maintenance services?",
+                answer: "Absolutely! We offer ongoing maintenance and support services to ensure your system operates at peak efficiency throughout its lifetime.",
+                category: { name: "General" }
+            }
+        ]
+    }
+
     return (
         <main className="w-full">
             {/* Hero Section */}
@@ -107,108 +152,7 @@ export default function ContactUsPage() {
 
                             {/* Contact Form */}
                             <div className="lg:col-span-2">
-                                <div className="bg-slate-50 rounded-3xl p-8 md:p-12">
-                                    <h2 className="text-2xl font-bold text-slate-900 mb-6">Send us a Message</h2>
-
-                                    <form className="space-y-6">
-                                        <div className="grid md:grid-cols-2 gap-6">
-                                            <div>
-                                                <label htmlFor="firstName" className="block text-sm font-semibold text-slate-900 mb-2">
-                                                    First Name *
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    id="firstName"
-                                                    name="firstName"
-                                                    required
-                                                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
-                                                    placeholder="John"
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <label htmlFor="lastName" className="block text-sm font-semibold text-slate-900 mb-2">
-                                                    Last Name *
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    id="lastName"
-                                                    name="lastName"
-                                                    required
-                                                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
-                                                    placeholder="Doe"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label htmlFor="email" className="block text-sm font-semibold text-slate-900 mb-2">
-                                                Email Address *
-                                            </label>
-                                            <input
-                                                type="email"
-                                                id="email"
-                                                name="email"
-                                                required
-                                                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
-                                                placeholder="john@example.com"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label htmlFor="phone" className="block text-sm font-semibold text-slate-900 mb-2">
-                                                Phone Number
-                                            </label>
-                                            <input
-                                                type="tel"
-                                                id="phone"
-                                                name="phone"
-                                                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
-                                                placeholder="+880 1XXX-XXXXXX"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label htmlFor="subject" className="block text-sm font-semibold text-slate-900 mb-2">
-                                                Subject *
-                                            </label>
-                                            <select
-                                                id="subject"
-                                                name="subject"
-                                                required
-                                                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all bg-white"
-                                            >
-                                                <option value="">Select a subject</option>
-                                                <option value="quote">Request a Quote</option>
-                                                <option value="information">General Information</option>
-                                                <option value="support">Technical Support</option>
-                                                <option value="partnership">Business Partnership</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
-
-                                        <div>
-                                            <label htmlFor="message" className="block text-sm font-semibold text-slate-900 mb-2">
-                                                Message *
-                                            </label>
-                                            <textarea
-                                                id="message"
-                                                name="message"
-                                                required
-                                                rows={5}
-                                                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all resize-none"
-                                                placeholder="Tell us about your project or inquiry..."
-                                            />
-                                        </div>
-
-                                        <button
-                                            type="submit"
-                                            className="w-full bg-gradient-to-r from-blue-600 to-green-600 text-white font-bold py-4 px-8 rounded-xl hover:from-blue-700 hover:to-green-700 transition-all shadow-lg hover:shadow-xl"
-                                        >
-                                            Send Message
-                                        </button>
-                                    </form>
-                                </div>
+                                <ContactForm />
                             </div>
                         </div>
                     </div>
@@ -238,27 +182,10 @@ export default function ContactUsPage() {
                         </div>
 
                         <div className="space-y-4">
-                            {[
-                                {
-                                    q: "How much does a solar system cost?",
-                                    a: "The cost varies depending on system size, your energy needs, and installation requirements. Contact us for a free site survey and customized quote."
-                                },
-                                {
-                                    q: "How long does installation take?",
-                                    a: "Most residential installations are completed within 1-3 days. Commercial projects may take 1-2 weeks depending on system size and complexity."
-                                },
-                                {
-                                    q: "Do you offer warranties?",
-                                    a: "Yes! We offer comprehensive warranties including 25-year performance warranty on panels and 5-10 year warranty on inverters and installation."
-                                },
-                                {
-                                    q: "Do you provide maintenance services?",
-                                    a: "Absolutely! We offer ongoing maintenance and support services to ensure your system operates at peak efficiency throughout its lifetime."
-                                }
-                            ].map((faq, index) => (
-                                <div key={index} className="bg-white rounded-2xl p-6 shadow-md">
-                                    <h3 className="text-lg font-bold text-slate-900 mb-2">{faq.q}</h3>
-                                    <p className="text-slate-600">{faq.a}</p>
+                            {faqs.map((faq) => (
+                                <div key={faq.id} className="bg-white rounded-2xl p-6 shadow-md">
+                                    <h3 className="text-lg font-bold text-slate-900 mb-2">{faq.question}</h3>
+                                    <p className="text-slate-600">{faq.answer}</p>
                                 </div>
                             ))}
                         </div>

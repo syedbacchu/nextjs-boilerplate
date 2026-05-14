@@ -43,8 +43,9 @@ const navLinks: NavItem[] = [
         name: 'Legal',
         children: [
             { name: 'Privacy Policy', href: '/privacy-policy/' },
-            { name: 'Terms & Conditions', href: '/terms-conditions' },
+            { name: 'Terms & Conditions', href: '/terms-and-conditions' },
             { name: 'Cookie Policy', href: '/cookie-policy' },
+            { name: 'Data Deletion', href: '/data-deletion' },
         ],
     },
 ]
