@@ -35,6 +35,7 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
     const [recaptchaLoaded, setRecaptchaLoaded] = useState(false)
     const recaptchaRef = useRef<HTMLDivElement>(null)
     const [recaptchaWidgetId, setRecaptchaWidgetId] = useState<string | null>(null)
+    const formRef = useRef<HTMLFormElement>(null)
 
     useEffect(() => {
         if (RECAPTCHA_ENABLED && RECAPTCHA_SITE_KEY && !window.grecaptcha) {
@@ -114,12 +115,15 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
             console.log('res', result);
             if (result.success) {
                 toast.success(result.message || 'Email send successfully')
-                router.refresh();
-                event.currentTarget.reset()
+                // Reset form using ref
+                if (formRef.current) {
+                    formRef.current.reset()
+                }
                 // Reset reCAPTCHA
                 if (recaptchaWidgetId && window.grecaptcha) {
                     window.grecaptcha.reset(recaptchaWidgetId)
                 }
+                router.refresh();
             } else {
                 toast.error(result.message || 'Failed to send email')
                 if (recaptchaWidgetId && window.grecaptcha) {
@@ -155,7 +159,7 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                 <div>
                     <label htmlFor="name" className="block text-sm font-semibold text-slate-900 mb-2">
                         Name *
