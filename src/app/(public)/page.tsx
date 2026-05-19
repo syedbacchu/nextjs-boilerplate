@@ -5,6 +5,7 @@ import ServiceHomeSection from "@/features/home/components/ServiceHomeSection"
 import ProjectsHomeSection from "@/features/home/components/ProjectsHomeSection"
 import SavingsSection from "@/features/home/components/SavingsSection"
 import TestimonialsHomeSection from "@/features/home/components/TestimonialsHomeSection"
+import NewsletterSubscribe from "@/features/subscriber/components/NewsletterSubscribe"
 import { getHomePageSliderAction } from "@/features/slider"
 import { getHomeDataAction } from "@/features/home"
 import {
@@ -99,6 +100,11 @@ export default async function Page() {
             <ProjectsHomeSection projects={projects} />
 
             <TestimonialsHomeSection testimonials={testimonials} />
+
+            {/* Newsletter Subscribe Section */}
+            <div className="container mx-auto px-4 py-12">
+                <NewsletterSubscribe layout="horizontal" />
+            </div>
         </main>
     )
 }
