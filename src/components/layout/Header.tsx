@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { useAuthStore } from '@/features/auth'
+import { useCommonSettingsStore } from '@/features/commonSettings/store/commonSettings.store'
 import LogoutButton from '@/components/LogoutButton'
 import { FaPhoneAlt, FaUserCircle, FaUserEdit } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
@@ -53,6 +54,8 @@ const navLinks: NavItem[] = [
 export default function Header() {
     const pathname = usePathname()
     const { user, loading } = useAuthStore()
+    const { getSettingsWithDefaults } = useCommonSettingsStore()
+    const settings = getSettingsWithDefaults()
     const [authOpen, setAuthOpen] = useState(false)
     const [mobileOpen, setMobileOpen] = useState(false)
     const [mobileSubmenus, setMobileSubmenus] = useState<string[]>([])
@@ -112,12 +115,13 @@ export default function Header() {
 
                     <Link href="/" className="flex items-center">
                         <Image
-                            src="/logo.png"
-                            alt="Logo"
+                            src={settings.logo}
+                            alt={settings.app_title}
                             width={180}
                             height={54}
                             className="h-11 w-auto"
                             priority
+                            unoptimized
                         />
                     </Link>
                 </div>
@@ -178,13 +182,13 @@ export default function Header() {
 
                 <div className="hidden items-center gap-4 lg:flex">
                     <a
-                        href="tel:+8801712345678"
+                        href={`tel:${settings.helpline}`}
                         className="flex items-center gap-2 text-[15px] font-semibold text-slate-700 transition-colors hover:text-emerald-600"
                     >
                         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
                             <FaPhoneAlt className="text-sm" />
                         </span>
-                        <span>01712 345 678</span>
+                        <span>{settings.helpline}</span>
                     </a>
 
                     {!user ? (
@@ -302,11 +306,11 @@ export default function Header() {
 
                         <div className="flex items-center justify-between gap-4 pt-4">
                             <a
-                                href="tel:+8801712345678"
+                                href={`tel:${settings.helpline}`}
                                 className="flex items-center gap-2 text-sm font-semibold text-slate-700"
                             >
                                 <FaPhoneAlt className="text-emerald-700" />
-                                01712 345 678
+                                {settings.helpline}
                             </a>
 
                             {!user ? (

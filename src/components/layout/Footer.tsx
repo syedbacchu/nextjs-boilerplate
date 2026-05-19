@@ -1,7 +1,10 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { FaFacebookF, FaGlobe, FaLinkedinIn, FaMapMarkerAlt, FaPhoneAlt, FaWhatsapp, FaYoutube } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
+import { useCommonSettingsStore } from '@/features/commonSettings/store/commonSettings.store'
 
 const quickLinks = [
     { label: 'Home', href: '/' },
@@ -32,6 +35,9 @@ const mapEmbedUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d73217
 const mapLinkUrl = 'https://maps.google.com/?q=Bio-Xin%20Cosmeceuticals%20-%20Mirpur%20DOHS'
 
 export default function Footer() {
+    const { getSettingsWithDefaults } = useCommonSettingsStore()
+    const settings = getSettingsWithDefaults()
+
     return (
         <footer className="bg-[#04453d] text-white">
             <div className="mx-auto container px-4 py-6 pb-8 ">
@@ -39,17 +45,18 @@ export default function Footer() {
                     <div className="xl:pr-6">
                         <Link href="/" className="inline-flex items-center">
                             <Image
-                                src="/logo.png"
-                                alt="Logo"
+                                src={settings.logo}
+                                alt={settings.app_title}
                                 width={190}
                                 height={56}
                                 className="h-12 w-auto"
                                 priority={false}
+                                unoptimized
                             />
                         </Link>
 
                         <p className="mt-4 max-w-sm text-sm leading-6 text-white/75">
-                            A clean, scalable starter built to help you launch fast and keep your product presentation consistent across the site.
+                            {settings.footer_about_us}
                         </p>
 
                         <div className="mt-6 flex flex-wrap gap-3">
@@ -117,26 +124,15 @@ export default function Footer() {
                                 <div className="mt-4 space-y-4 text-sm text-white/75">
                                     <div className="flex items-start gap-3">
                                         <FaPhoneAlt className="mt-1 shrink-0 text-white" />
-                                        <span>+880 1712 345 678</span>
+                                        <span>{settings.helpline}</span>
                                     </div>
                                     <div className="flex items-start gap-3">
                                         <MdEmail className="mt-1 shrink-0 text-lg text-white" />
-                                        <span>info@example.com</span>
+                                        <span>{settings.company_email}</span>
                                     </div>
                                     <div className="flex items-start gap-3">
                                         <FaMapMarkerAlt className="mt-1 shrink-0 text-white" />
-                                        <span>House # 12, Road # 5<br />Dhanmondi, Dhaka-1205</span>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <FaGlobe className="mt-1 shrink-0 text-white" />
-                                        <a
-                                            href={mapLinkUrl}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="transition-colors hover:text-white"
-                                        >
-                                            www.greensolar.com.bd
-                                        </a>
+                                        <span dangerouslySetInnerHTML={{ __html: settings.company_address }} />
                                     </div>
                                 </div>
                             </div>
@@ -171,7 +167,7 @@ export default function Footer() {
                 </div>
 
                 <div className="py-4 text-center text-sm text-white/70">
-                    © {new Date().getFullYear()} Company Name. All Rights Reserved.
+                    {settings.copyright_text}
                 </div>
             </div>
         </footer>
