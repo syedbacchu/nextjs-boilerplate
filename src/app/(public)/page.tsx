@@ -37,7 +37,7 @@ export default async function Page() {
 
     try {
         const sliderResponse = await getHomePageSliderAction()
-
+console.log(sliderResponse)
         if (sliderResponse?.success && sliderResponse?.data?.data?.length > 0) {
             heroSlides = sliderResponse.data.data
                 .filter(slider => slider.photo) // Only include sliders with photos

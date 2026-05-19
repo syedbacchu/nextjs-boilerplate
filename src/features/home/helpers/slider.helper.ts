@@ -46,6 +46,7 @@ export function transformSliderToHeroSlide(slider: SliderListItem): HeroSlide {
 
     return {
         image: slider.photo,
+        mobile_banner: slider.mobile_banner || undefined,
         tagline: slider.tagline || undefined,
         title: mainTitle,
         highlightText: highlightText,
